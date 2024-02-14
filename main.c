@@ -16,37 +16,42 @@ enum Tiles {
     WATER
 };
 
-int getIndex(int x, int y) {
-    return (y*CHUNK_LENGTH)+x;
+int getIndex(int x, int y, int z) {
+    return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
 }
 
-int getTile(int *chunk, int x, int y) {
-    return chunk[(y*CHUNK_LENGTH)+x];
+int getTile(int *chunk, int x, int y,  int z) {
+    return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
 }
 
-void addTile(int *chunk, int tile, int x, int y) {
-    chunk[(y*CHUNK_LENGTH)+x] = tile;
+void addTile(int *chunk, int tile, int x, int y, int z) {
+    chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x] = tile;
 }
 
-void addUpdate(int *tileUpdates, int x, int y) {
-    int i = getIndex(x,y);
+void addUpdate(int *tileUpdates, int x, int y, int z) {
+    int i = getIndex(x,y,z);
     tileUpdates[i] = 1;
 }
 
-void fillTile(int *chunk, int tile, int x1, int y1, int x2, int y2) {
+void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
     for (int i = x1; i < x2; i++) {
         for (int j = y1; j < y2; j++) {
-            addTile(chunk, tile, i, j);
+            for (int a = z1; a < z2; a++) {
+                addTile(chunk, tile, i, j, a);
+            }
         }
     }
 }
 
 void registerUpdate(int *newUpdates, int index) {
-    newUpdates[index] = 1;
-    newUpdates[index-1] = 1;
-    newUpdates[index+1] = 1;
-    newUpdates[index-CHUNK_LENGTH] = 1;
-    newUpdates[index+CHUNK_LENGTH] = 1;
+    newUpdates[index] = 1;              //self
+    newUpdates[index-1] = 1;            //left
+    newUpdates[index+1] = 1;            //right
+    newUpdates[index-CHUNK_LENGTH] = 1; //up
+    newUpdates[index+CHUNK_LENGTH] = 1; //down
+    newUpdates[index+CHUNK_LENGTH*CHUNK_HEIGHT] = 1; //forwards
+    newUpdates[index-CHUNK_LENGTH*CHUNK_HEIGHT] = 1; //backwards
+
 }
 
 void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
@@ -81,6 +86,12 @@ void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index)
         }
         if (chunk[index-CHUNK_LENGTH] == WOOD) {
             updatedChunk[index-CHUNK_LENGTH] = FIRE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH);
+        }
+        if (chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == WOOD) {
+            updatedChunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] = FIRE; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH*CHUNK_HEIGHT);
+        }
+        if (chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == WOOD) {
+            updatedChunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] = FIRE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH*CHUNK_HEIGHT);
         }
         
     }
@@ -118,8 +129,17 @@ void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index)
             updatedChunk[index-1] = WATER; registerUpdate(scheduledUpdates, index-1);
         }
 
+        //downwards
         if (chunk[index+CHUNK_LENGTH] == AIR || chunk[index+CHUNK_LENGTH] == FIRE || chunk[index+CHUNK_LENGTH] == SAND) {
             updatedChunk[index+CHUNK_LENGTH] = WATER; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
+        }
+
+        //forwards and back
+        if (chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == AIR || chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == FIRE || chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == SAND) {
+            updatedChunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] = WATER; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH*CHUNK_HEIGHT);
+        }
+        if (chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == AIR || chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == FIRE || chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == SAND) {
+            updatedChunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] = WATER; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH*CHUNK_HEIGHT);
         }
     }
 
@@ -180,10 +200,18 @@ char symbols[] = {
 void printChunk(int *chunk, int *tileUpdates) {
     for (int y = 0; y < CHUNK_LENGTH; y++) {
         
+        int z = 9;
         for (int x = 0; x < CHUNK_HEIGHT; x++) {
-            printf("%c ",symbols[chunk[(y*CHUNK_LENGTH)+x]]);
+            printf("%c ",symbols[chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x]]);
         }
-        // printf(" : ");
+        
+        printf(" : ");
+        
+        z = 9;
+        for (int x = 0; x < CHUNK_HEIGHT; x++) {
+            printf("%c ",symbols[chunk[y*CHUNK_WIDTH*CHUNK_HEIGHT + z*CHUNK_HEIGHT + x]]);
+        }
+        
         // for (int x = 0; x < CHUNK_HEIGHT; x++) {
         //     printf("%d ", tileUpdates[(y*CHUNK_LENGTH)+x]);
         // }
@@ -200,20 +228,17 @@ int main() {
     int tileUpdates[CHUNK_SIZE];  initializeArray(tileUpdates, CHUNK_SIZE, 0);
 
 
-    fillTile(chunk, STONE, 0, 0, 16, 16);
-    fillTile(chunk, AIR, 1, 1, 15, 15);
-    fillTile(chunk, WOOD, 8, 1, 11, 15);
-    fillTile(chunk, SAND, 9, 1, 11, 15);
-    
-    fillTile(chunk, WOOD, 1, 8, 15, 12);
+    fillTile(chunk, STONE, 0, 0, 0, 16, 16, 16);
+    fillTile(chunk, AIR, 1, 1, 1, 15, 15, 15);
 
-    addTile(chunk, MISSILE, 2, 2); addUpdate(tileUpdates,2,2);
-    addTile(chunk, MISSILE, 4, 4); addUpdate(tileUpdates,4,4);
-    
-    addTile(chunk, WATER, 2, 6); addUpdate(tileUpdates,2,6);
+    fillTile(chunk, WATER, 1,1,1, 15,2,15);
+    fillTile(chunk, SAND, 1,2,1, 15,3,15);
+    fillTile(chunk, WOOD, 1,3,1, 15,14,15);
 
-    addTile(chunk, MISSILE, 3, 13); addUpdate(tileUpdates,3,13);
-    
+    addTile(chunk, FIRE, 9, 14, 9); addUpdate(tileUpdates, 9,14,9);
+
+    //addTile(chunk, MISSILE, 2, 2, 2); addUpdate(tileUpdates,2,2, 2);
+    //addTile(chunk, MISSILE, 4, 4, 4); addUpdate(tileUpdates,4,4,4);  
     
     //render & update chunk 30 times
     for (int i = 0; i < 60; i++) {
