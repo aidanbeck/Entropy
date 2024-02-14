@@ -16,10 +16,37 @@ enum Tiles {
     WATER
 };
 
+int getIndex(int x, int y) {
+    return (y*CHUNK_LENGTH)+x;
+}
+
+int getTile(int *chunk, int x, int y) {
+    return chunk[(y*CHUNK_LENGTH)+x];
+}
+
+void addTile(int *chunk, int tile, int x, int y) {
+    chunk[(y*CHUNK_LENGTH)+x] = tile;
+}
+
+void addUpdate(int *tileUpdates, int x, int y) {
+    int i = getIndex(x,y);
+    tileUpdates[i] = 1;
+}
+
+void fillTile(int *chunk, int tile, int x1, int y1, int x2, int y2) {
+    for (int i = x1; i < x2; i++) {
+        for (int j = y1; j < y2; j++) {
+            addTile(chunk, tile, i, j);
+        }
+    }
+}
+
 void registerUpdate(int *newUpdates, int index) {
     newUpdates[index] = 1;
     newUpdates[index-1] = 1;
     newUpdates[index+1] = 1;
+    newUpdates[index-CHUNK_LENGTH] = 1;
+    newUpdates[index+CHUNK_LENGTH] = 1;
 }
 
 void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
@@ -28,6 +55,10 @@ void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index)
     //Smoke rules
     if (tile == SMOKE) {
         updatedChunk[index] = AIR; registerUpdate(scheduledUpdates, index);
+        if (chunk[index-CHUNK_LENGTH] == AIR) { //-CHUNK_LENGHT is basically y + 1
+            updatedChunk[index-CHUNK_LENGTH] = SMOKE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH);
+            
+        }
     }
 
     //fire rules
@@ -45,6 +76,13 @@ void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index)
         if (chunk[index-1] == WOOD) {
             updatedChunk[index-1] = FIRE; registerUpdate(scheduledUpdates, index-1);
         }
+        if (chunk[index+CHUNK_LENGTH] == WOOD) {
+            updatedChunk[index+CHUNK_LENGTH] = FIRE; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
+        }
+        if (chunk[index-CHUNK_LENGTH] == WOOD) {
+            updatedChunk[index-CHUNK_LENGTH] = FIRE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH);
+        }
+        
     }
 
     //missile rules
@@ -79,6 +117,17 @@ void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index)
         if (chunk[index-1] == AIR || chunk[index-1] == FIRE || chunk[index-1] == SAND) {
             updatedChunk[index-1] = WATER; registerUpdate(scheduledUpdates, index-1);
         }
+
+        if (chunk[index+CHUNK_LENGTH] == AIR || chunk[index+CHUNK_LENGTH] == FIRE || chunk[index+CHUNK_LENGTH] == SAND) {
+            updatedChunk[index+CHUNK_LENGTH] = WATER; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
+        }
+    }
+
+    else if (tile == SAND) {
+        if (chunk[index+CHUNK_LENGTH] == AIR || chunk[index+CHUNK_LENGTH] == WATER) {
+            updatedChunk[index] = AIR; registerUpdate(scheduledUpdates, index);
+            updatedChunk[index+CHUNK_LENGTH] = SAND; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
+        }
     }
 
 }
@@ -91,11 +140,11 @@ void initializeArray(int *array, int length, int value) {
 
 void updateChunk(int *chunk, int *tileUpdates) {
 
-    int scheduledUpdates[CHUNK_LENGTH]; initializeArray(scheduledUpdates, CHUNK_LENGTH, 0);//a list of what tiles to update on the next tick. 0 indicates don't update this tile, 1 indicates do update
-    int updatedChunk[CHUNK_LENGTH]; initializeArray(updatedChunk, CHUNK_LENGTH, -1); //a list of tiles that need to be changed. -1 indicates no change.
+    int scheduledUpdates[CHUNK_SIZE]; initializeArray(scheduledUpdates, CHUNK_SIZE, 0);//a list of what tiles to update on the next tick. 0 indicates don't update this tile, 1 indicates do update
+    int updatedChunk[CHUNK_SIZE]; initializeArray(updatedChunk, CHUNK_SIZE, -1); //a list of tiles that need to be changed. -1 indicates no change.
 
     //update all tiles that have updates scheduled
-    for (int i = 0; i < CHUNK_LENGTH; i++) {
+    for (int i = 0; i < CHUNK_SIZE; i++) {
         if (tileUpdates[i] == 1) {
             updateTile(chunk, updatedChunk, scheduledUpdates, i);
         }
@@ -103,7 +152,7 @@ void updateChunk(int *chunk, int *tileUpdates) {
 
     //add new scheduled updates to updates list for the next tick
     //also make any changes to the chunk that were decided upon.
-    for (int i = 0; i < CHUNK_LENGTH; i++) {
+    for (int i = 0; i < CHUNK_SIZE; i++) {
         tileUpdates[i] = scheduledUpdates[i];
 
         if (updatedChunk[i] != -1) {
@@ -127,17 +176,19 @@ char symbols[] = {
     '~' //🌊
 };
 
-//prints a representation of the chunk to console.
-void printChunk(int *chunk) {
-    for (int i = 0; i < CHUNK_LENGTH; i++) {
-        printf("%c",symbols[chunk[i]]);
-    }
-}
+//prints a representation of the chunk to console (vertical slice)
+void printChunk(int *chunk, int *tileUpdates) {
+    for (int y = 0; y < CHUNK_LENGTH; y++) {
+        
+        for (int x = 0; x < CHUNK_HEIGHT; x++) {
+            printf("%c ",symbols[chunk[(y*CHUNK_LENGTH)+x]]);
+        }
+        // printf(" : ");
+        // for (int x = 0; x < CHUNK_HEIGHT; x++) {
+        //     printf("%d ", tileUpdates[(y*CHUNK_LENGTH)+x]);
+        // }
 
-//print tile update list
-void printUpdates(int *tileUpdates) {
-    for (int i = 0; i < CHUNK_LENGTH; i++) {
-        printf("%d",tileUpdates[i]);
+        printf("\n"); 
     }
 }
 
@@ -145,28 +196,32 @@ int main() {
 
     //set up world
     int tick = 0;
-    int chunk[CHUNK_LENGTH];        initializeArray(chunk, CHUNK_LENGTH, 0);
-    int tileUpdates[CHUNK_LENGTH];  initializeArray(tileUpdates, CHUNK_LENGTH, 0);
+    int chunk[CHUNK_SIZE];        initializeArray(chunk, CHUNK_SIZE, 0);
+    int tileUpdates[CHUNK_SIZE];  initializeArray(tileUpdates, CHUNK_SIZE, 0);
 
-    chunk[0] = STONE;
-    chunk[10] = MISSILE2; tileUpdates[10] = 1;
-    chunk[11] = SAND;
-    chunk[15] = MISSILE2; tileUpdates[15] = 1;
+
+    fillTile(chunk, STONE, 0, 0, 16, 16);
+    fillTile(chunk, AIR, 1, 1, 15, 15);
+    fillTile(chunk, WOOD, 8, 1, 11, 15);
+    fillTile(chunk, SAND, 9, 1, 11, 15);
     
-    chunk[CHUNK_LENGTH-1] = STONE;
-    chunk[CHUNK_LENGTH-3] = MISSILE; tileUpdates[CHUNK_LENGTH-3] = 1;
+    fillTile(chunk, WOOD, 1, 8, 15, 12);
 
-    initializeArray(chunk+16, CHUNK_LENGTH-16-16, WOOD);
-    chunk[CHUNK_LENGTH/2] = WATER;
+    addTile(chunk, MISSILE, 2, 2); addUpdate(tileUpdates,2,2);
+    addTile(chunk, MISSILE, 4, 4); addUpdate(tileUpdates,4,4);
+    
+    addTile(chunk, WATER, 2, 6); addUpdate(tileUpdates,2,6);
 
+    addTile(chunk, MISSILE, 3, 13); addUpdate(tileUpdates,3,13);
     
     
     //render & update chunk 30 times
-    for (int i = 0; i < 9000; i++) {
-        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        printUpdates(tileUpdates); printf("\n"); printChunk(chunk); printf("\n");
+    for (int i = 0; i < 60; i++) {
+        printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        printf("\n-\n");
+        printChunk(chunk, tileUpdates); printf("\n");
         updateChunk(chunk, tileUpdates); tick++;
-        usleep(200000);
+        usleep(250000);
     }
     
     return 0;
