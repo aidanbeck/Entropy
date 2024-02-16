@@ -220,6 +220,43 @@ void printChunk(int *chunk, int *tileUpdates) {
     }
 }
 
+void printChunk3d(int *chunk) {
+    int renderMap[PRINT_RES]; initializeArray(renderMap, PRINT_RES, 0);
+    int renderMapOffset[PRINT_RES]; initializeArray(renderMapOffset, PRINT_RES, 0);
+
+    int mapLength = CHUNK_LENGTH+CHUNK_HEIGHT;
+    int mapHeight = CHUNK_WIDTH+CHUNK_HEIGHT;
+
+    for (int y = CHUNK_HEIGHT; y > 0; y--) {
+        for (int z = 0; z < CHUNK_WIDTH; z++) {
+            for (int x = 0; x < CHUNK_LENGTH; x++) {
+
+                int tile = getTile(chunk, x, y, z);
+                if (tile != AIR && tile != STONE) {
+                    //renderMap[z*mapHeight+x] = tile; 2d top down
+                    renderMap[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = tile;
+                }
+
+
+            }
+        }
+    }
+
+    
+    for (int y = 0; y < mapHeight; y++) {
+        for (int x = 0; x < mapLength; x++) {
+            int tile = renderMap[y*mapHeight+x];
+            //int offset = renderMapOffset[y*mapHeight+x];
+            char character = symbols[tile];
+            printf("%c", character);
+            //printf(" ");
+            
+        }
+        printf("\n");
+    }
+
+}
+
 int main() {
 
     //set up world
@@ -228,25 +265,61 @@ int main() {
     int tileUpdates[CHUNK_SIZE];  initializeArray(tileUpdates, CHUNK_SIZE, 0);
 
 
+    // fillTile(chunk, STONE, 0, 0, 0, 16, 1, 16);
+    // 
+    // fillTile(chunk, SAND, 8, 0, 8, 9, 9, 9);
+
     fillTile(chunk, STONE, 0, 0, 0, 16, 16, 16);
     fillTile(chunk, AIR, 1, 1, 1, 15, 15, 15);
 
-    fillTile(chunk, WATER, 1,1,1, 15,2,15);
-    fillTile(chunk, SAND, 1,2,1, 15,3,15);
-    fillTile(chunk, WOOD, 1,3,1, 15,14,15);
+    //beams
+    fillTile(chunk, WOOD, 1, 8, 1, 15, 9, 2);   fillTile(chunk, SAND, 1, 7, 1, 15, 8, 2);
+    fillTile(chunk, WOOD, 1, 8, 14, 15, 9, 15); fillTile(chunk, SAND, 1, 7, 14, 15, 8, 15);
+    fillTile(chunk, WOOD, 1, 8, 1, 2, 9, 15);   fillTile(chunk, SAND, 1, 7, 1, 2, 8, 15);
+    fillTile(chunk, WOOD, 14, 8, 1, 15, 9, 15); fillTile(chunk, SAND, 14, 7, 1, 15, 8, 15);
 
-    addTile(chunk, FIRE, 9, 14, 9); addUpdate(tileUpdates, 9,14,9);
+    //floor beams
+    fillTile(chunk, WOOD, 14, 14, 1, 15, 15, 15);
+    fillTile(chunk, WOOD, 1, 14, 14, 15, 15, 15);
+    fillTile(chunk, WOOD, 1, 14, 1, 15, 15, 2);
+    
 
-    //addTile(chunk, MISSILE, 2, 2, 2); addUpdate(tileUpdates,2,2, 2);
-    //addTile(chunk, MISSILE, 4, 4, 4); addUpdate(tileUpdates,4,4,4);  
+    //tall beams
+    fillTile(chunk, SAND, 1, 2, 1, 15, 3, 2);   fillTile(chunk, WOOD, 1, 3, 1, 15, 4, 2);
+    fillTile(chunk, SAND, 1, 2, 14, 15, 3, 15); fillTile(chunk, WOOD, 2, 3, 14, 15, 4, 15);
+    fillTile(chunk, SAND, 1, 2, 1, 3, 4, 15);   fillTile(chunk, WOOD, 1, 2, 1, 2, 4, 15);
+    fillTile(chunk, SAND, 14, 2, 1, 15, 3, 15); fillTile(chunk, WOOD, 14, 3, 1, 15, 4, 15);
+
+    //pillars
+    fillTile(chunk, WOOD, 1, 1, 1, 2, 15, 2);
+    fillTile(chunk, WOOD, 14, 1, 1, 15, 15, 2);
+    fillTile(chunk, WOOD, 1, 1, 14, 2, 15, 15);
+    fillTile(chunk, WOOD, 14, 1, 14, 15, 15, 15);
+
+    //sand pillar
+    fillTile(chunk, SAND, 7, 5, 7, 10, 15, 10);
+
+    //wooden floor
+    fillTile(chunk, WOOD, 1, 14, 1, 5, 15, 5);
+    fillTile(chunk, WATER, 2, 14, 2, 4, 15, 4);
+
+    //friendly missile
+    addTile(chunk, MISSILE2, 12, 13, 12); addUpdate(tileUpdates, 12, 13, 12);
+    addTile(chunk, MISSILE2, 13, 10, 14); addUpdate(tileUpdates, 13, 10, 14);
+
+    // fillTile(chunk, WOOD, 1, 1, 1, 15, 2, 15);
+    // fillTile(chunk, SAND, 1, 2, 1, 15, 3, 15);
+    // addUpdate(tileUpdates, 1,2,1);
+
     
     //render & update chunk 30 times
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 120+64; i++) {
         printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         printf("\n-\n");
-        printChunk(chunk, tileUpdates); printf("\n");
+        //printChunk(chunk, tileUpdates); printf("\n");
+        printChunk3d(chunk);
         updateChunk(chunk, tileUpdates); tick++;
-        usleep(250000);
+        usleep(100000);
     }
     
     return 0;
