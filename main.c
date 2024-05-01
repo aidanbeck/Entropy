@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "map.h"
 #include "tiles.h"
+#include "tools.h"
 
 int getIndex(int x, int y, int z) {
     return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
