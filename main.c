@@ -4,6 +4,7 @@
 #include "main.h"
 #include "printer.h"
 #include "map.h"
+#include "tiles.h"
 
 int getIndex(int x, int y, int z) {
     return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
@@ -42,100 +43,14 @@ void registerUpdate(int *newUpdates, int index) {
     newUpdates[index-CHUNK_LENGTH*CHUNK_HEIGHT] = 1; //backwards
 }
 
+//the rules for each tile
 void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
     int tile = chunk[index];
 
-    //Smoke rules
-    if (tile == SMOKE) {
-        updatedChunk[index] = AIR; registerUpdate(scheduledUpdates, index);
-        if (chunk[index-CHUNK_LENGTH] == AIR) { //-CHUNK_LENGHT is basically y + 1
-            updatedChunk[index-CHUNK_LENGTH] = SMOKE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH);
-            
-        }
-    }
-
-    //fire rules
-    else if (tile == FIRE) {
-        updatedChunk[index] = FIRE2; registerUpdate(scheduledUpdates, index);
-
-        
-    }
-    else if (tile == FIRE2) {
-        updatedChunk[index] = SMOKE; registerUpdate(scheduledUpdates, index);
-
-        if (chunk[index+1] == WOOD) {
-            updatedChunk[index+1] = FIRE; registerUpdate(scheduledUpdates, index+1);
-        }
-        if (chunk[index-1] == WOOD) {
-            updatedChunk[index-1] = FIRE; registerUpdate(scheduledUpdates, index-1);
-        }
-        if (chunk[index+CHUNK_LENGTH] == WOOD) {
-            updatedChunk[index+CHUNK_LENGTH] = FIRE; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
-        }
-        if (chunk[index-CHUNK_LENGTH] == WOOD) {
-            updatedChunk[index-CHUNK_LENGTH] = FIRE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH);
-        }
-        if (chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == WOOD) {
-            updatedChunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] = FIRE; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH*CHUNK_HEIGHT);
-        }
-        if (chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == WOOD) {
-            updatedChunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] = FIRE; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH*CHUNK_HEIGHT);
-        }
-        
-    }
-
-    //missile rules
-    else if (tile == MISSILE) {
-        if (chunk[index+1] == AIR) {
-            updatedChunk[index] = SMOKE; registerUpdate(scheduledUpdates, index);
-            updatedChunk[index+1] = MISSILE; registerUpdate(scheduledUpdates, index+1);
-        } else if (chunk[index+1] == STONE || chunk[index+1] == SAND) {
-            updatedChunk[index] = MISSILE2; registerUpdate(scheduledUpdates, index);
-        } else {
-            updatedChunk[index] = FIRE; registerUpdate(scheduledUpdates, index);
-        }
-    }
-
-    //missile2 rules
-    else if (tile == MISSILE2) {
-        if (chunk[index-1] == AIR) {
-            updatedChunk[index] = SMOKE; registerUpdate(scheduledUpdates, index);
-            updatedChunk[index-1] = MISSILE2; registerUpdate(scheduledUpdates, index+1);
-        } else if (chunk[index-1] == STONE || chunk[index-1] == SAND) {
-            updatedChunk[index] = MISSILE; registerUpdate(scheduledUpdates, index);
-        } else {
-            updatedChunk[index] = FIRE; registerUpdate(scheduledUpdates, index);
-        }
-    }
-
-    //water rules
-    else if (tile == WATER) {
-        if (chunk[index+1] == AIR || chunk[index+1] == FIRE || chunk[index+1] == SAND) {
-            updatedChunk[index+1] = WATER; registerUpdate(scheduledUpdates, index+1);
-        }
-        if (chunk[index-1] == AIR || chunk[index-1] == FIRE || chunk[index-1] == SAND) {
-            updatedChunk[index-1] = WATER; registerUpdate(scheduledUpdates, index-1);
-        }
-
-        //downwards
-        if (chunk[index+CHUNK_LENGTH] == AIR || chunk[index+CHUNK_LENGTH] == FIRE || chunk[index+CHUNK_LENGTH] == SAND) {
-            updatedChunk[index+CHUNK_LENGTH] = WATER; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
-        }
-
-        //forwards and back
-        if (chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == AIR || chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == FIRE || chunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] == SAND) {
-            updatedChunk[index+CHUNK_LENGTH*CHUNK_HEIGHT] = WATER; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH*CHUNK_HEIGHT);
-        }
-        if (chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == AIR || chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == FIRE || chunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] == SAND) {
-            updatedChunk[index-CHUNK_LENGTH*CHUNK_HEIGHT] = WATER; registerUpdate(scheduledUpdates, index-CHUNK_LENGTH*CHUNK_HEIGHT);
-        }
-    }
-
-    else if (tile == SAND) {
-        if (chunk[index+CHUNK_LENGTH] == AIR || chunk[index+CHUNK_LENGTH] == WATER) {
-            updatedChunk[index] = AIR; registerUpdate(scheduledUpdates, index);
-            updatedChunk[index+CHUNK_LENGTH] = SAND; registerUpdate(scheduledUpdates, index+CHUNK_LENGTH);
-        }
+    Tile data = TILE_TYPES[tile];
+    
+    if (data.rule != NULL) { //may want to check if data in general is defined as well
+        data.rule(chunk, updatedChunk, scheduledUpdates, index);
     }
 
 }
@@ -176,6 +91,7 @@ int main() {
     int tick = 0;
     int chunk[CHUNK_SIZE];        initializeArray(chunk, CHUNK_SIZE, 0);
     int tileUpdates[CHUNK_SIZE];  initializeArray(tileUpdates, CHUNK_SIZE, 0);
+    compileRules();
     
     createBorder(chunk);
     mapTower(chunk);

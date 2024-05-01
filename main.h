@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define CHUNK_LENGTH 16
 #define CHUNK_WIDTH 16
@@ -17,6 +18,8 @@ void addTile(int *chunk, int tile, int x, int y, int z);
 void addUpdate(int *tileUpdates, int x, int y, int z);
 void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2);
 
+void registerUpdate(int *newUpdates, int index);
+
 enum Tiles {
     AIR,
     STONE,
@@ -27,7 +30,9 @@ enum Tiles {
     SMOKE,
     MISSILE,
     MISSILE2,
-    WATER
+    WATER,
+
+    TILE_TYPE_COUNT
 };
 
 #endif
