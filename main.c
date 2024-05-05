@@ -11,6 +11,13 @@ int getIndex(int x, int y, int z) {
     return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
 }
 
+void getCoordinates(int index, int *x, int *y, int *z) {
+    *z = index / (CHUNK_WIDTH * CHUNK_HEIGHT);
+    int remainder = index % (CHUNK_WIDTH * CHUNK_HEIGHT);
+    *y = remainder / CHUNK_HEIGHT;
+    *x = remainder % CHUNK_HEIGHT;
+}
+
 int getTile(int *chunk, int x, int y,  int z) {
     return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
 }
@@ -62,7 +69,10 @@ void initializeArray(int *array, int length, int value) {
     }
 }
 
-void updateChunk(int *chunk, int *tileUpdates) {
+int updateChunk(Chunk *CHUNK) {
+
+    int *chunk = CHUNK->chunk;
+    int *tileUpdates = CHUNK->updates; //names might not be standardized
 
     int scheduledUpdates[CHUNK_SIZE]; initializeArray(scheduledUpdates, CHUNK_SIZE, 0);//a list of what tiles to update on the next tick. 0 indicates don't update this tile, 1 indicates do update
     int updatedChunk[CHUNK_SIZE]; initializeArray(updatedChunk, CHUNK_SIZE, -1); //a list of tiles that need to be changed. -1 indicates no change.
@@ -76,38 +86,111 @@ void updateChunk(int *chunk, int *tileUpdates) {
 
     //add new scheduled updates to updates list for the next tick
     //also make any changes to the chunk that were decided upon.
+    int shouldUpdateChunk = 0;
+
     for (int i = 0; i < CHUNK_SIZE; i++) {
         tileUpdates[i] = scheduledUpdates[i];
 
-        if (updatedChunk[i] != -1) {
+        if (tileUpdates[i] == 1 && shouldUpdateChunk == 0) { //if the chunk will have more tile updates
+            shouldUpdateChunk = 1; //set the chunk to update
+        }
+
+        //!!! there needs to be some tech here where a tile can update & write to the chunk next to it
+
+        if (updatedChunk[i] != -1) { //write changed tiles
             chunk[i] = updatedChunk[i];
         }
     }
 
+    return shouldUpdateChunk;
 }
+
+void updateWorld(Chunk *WORLD, int *chunkUpdates) {
+
+    int scheduledUpdates[WORLD_SIZE]; initializeArray(scheduledUpdates, WORLD_SIZE, 0); //list chunks that get updates. 0 means don't update, 1 means do.
+
+    //update all chunks that have updates scheduled
+    for (int i = 0; i < WORLD_SIZE; i++) {
+        if (chunkUpdates[i] == 1) {
+
+            Chunk *toUpdate = &WORLD[i];
+            scheduledUpdates[i] = updateChunk(toUpdate);
+            
+        }
+    }
+
+    //add new scheduled updates to updates list for the next tick
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        chunkUpdates[i] = scheduledUpdates[i];
+    }
+
+}
+
+Chunk WORLD[WORLD_SIZE];
+int chunkUpdates[WORLD_SIZE]; //like tileupdates but for chunks that have tileupdates
 
 int main() {
 
     //set up world
+    for (int i = 0; i < WORLD_SIZE; i++) {
+
+        Chunk newChunk;
+
+        initializeArray(newChunk.chunk, CHUNK_SIZE, 0);
+        initializeArray(newChunk.updates, CHUNK_SIZE, 0);
+
+        newChunk.x = 0;
+        newChunk.y = 0;
+        newChunk.z = 0;
+
+        WORLD[i] = newChunk;
+    }
+
     int tick = 0;
-    int chunk[CHUNK_SIZE];        initializeArray(chunk, CHUNK_SIZE, 0);
-    int tileUpdates[CHUNK_SIZE];  initializeArray(tileUpdates, CHUNK_SIZE, 0);
     compileRules();
-    
-    createBorder(chunk);
-    mapTower(chunk);
-    mapTowerUpdates(tileUpdates);
+
+    Chunk *startChunk = &WORLD[0]; //create example chunk
+    chunkUpdates[0] = 1; //turn on example chunk
+    createBorder(startChunk);
+    mapTower(startChunk);
+
+    Chunk *startChunk1 = &WORLD[1]; //create example chunk
+    chunkUpdates[1] = 1; //turn on example chunk
+    createBorder(startChunk1);
+    mapTower(startChunk1);
 
     //render & update chunk i times
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < 50000; i++) {
         
-        usleep(100000);
-        //printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        printChunk3d(chunk, 1);
+        usleep(200);
         
-        updateChunk(chunk, tileUpdates);
+        //printMemory(startChunk);
+        
+        updateWorld(WORLD, chunkUpdates);
+        
+        if (i % 50 == 0) { //every x frames
+            printChunk3d(startChunk->chunk,1);
+        }
         tick++;
     }
-    
+
+    //render & update chunk i times
+    // for (int i = 0; i < 50000; i++) {
+        
+    //     usleep(50000);
+        
+    //     //printMemory(startChunk);
+        
+    //     updateWorld(WORLD, chunkUpdates);
+        
+    //     //if (i % 300 == 0) { //every x frames
+    //         printChunk3d(startChunk->chunk,1);
+    //     //}
+    //     tick++;
+    // }
+
+    printChunk3d(startChunk->chunk,1);
+
+
     return 0;
 }

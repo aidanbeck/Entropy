@@ -4,3 +4,4 @@
 
 void printChunk(int *chunk);
 void printChunk3d(int *chunk, int isometric);
+void printMemory(Chunk *CHUNK);

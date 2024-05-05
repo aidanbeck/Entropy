@@ -11,7 +11,8 @@ char symbols[] = {
     ':', //☁
     '>', //🚀
     '<',
-    '~' //🌊
+    '~', //🌊
+    '&'
 };
 
 //prints a representation of the chunk to console (vertical slice)
@@ -64,7 +65,7 @@ void printChunk3d(int *chunk, int isometric) {
 
     for (int y = CHUNK_HEIGHT; y > 0; y--) {
         for (int z = 0; z < CHUNK_WIDTH; z++) {
-            for (int x = 0; x < CHUNK_LENGTH; x++) {
+            for (int x = 0; x < CHUNK_LENGTH; x++) {    //can add x or y offset to CHUNK_LENGTH and CHUNK_WIDTH
 
                 int tile = getTile(chunk, x, y, z);
                 if (tile != AIR && tile != STONE) {
@@ -84,4 +85,21 @@ void printChunk3d(int *chunk, int isometric) {
 
     //print frame
     printf("%s", frame);
+}
+
+void printMemory(Chunk *CHUNK) {
+
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        printf("%d", CHUNK->chunk[i]);
+    }
+    printf("\n---\n");
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        printf("%d", CHUNK->updates[i]);
+    }
+    printf("\n---\n");
+    int x = CHUNK->x;
+    int y = CHUNK->y;
+    int z = CHUNK->z;
+    printf("%d,%d,%d.\n", x, y, z);
+
 }

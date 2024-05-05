@@ -76,3 +76,10 @@ int readFront(int index) {
 int readBack(int index) {
     return index - (CHUNK_LENGTH*CHUNK_HEIGHT);
 }
+
+//detectChunkBorder
+int detectChunkBorder(int index) {
+    
+
+    return 0;
+}

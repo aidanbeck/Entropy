@@ -10,6 +10,14 @@
 #define CHUNK_HEIGHT 16
 #define CHUNK_SIZE (CHUNK_LENGTH * CHUNK_WIDTH * CHUNK_HEIGHT)
 
+#define WORLD_LENGTH 16
+#define WORLD_WIDTH 16
+#define WORLD_HEIGHT 2
+#define WORLD_SIZE (CHUNK_LENGTH * CHUNK_WIDTH * CHUNK_HEIGHT)
+
+
+
+
 #define PRINT_RES ((CHUNK_LENGTH+CHUNK_HEIGHT+1) * (CHUNK_WIDTH+CHUNK_HEIGHT))
 
 void initializeArray(int *array, int length, int value);
@@ -31,8 +39,17 @@ enum Tiles {
     MISSILE,
     MISSILE2,
     WATER,
+    HUMAN,
 
     TILE_TYPE_COUNT
 };
+
+typedef struct {
+    int chunk[CHUNK_SIZE];
+    int updates[CHUNK_SIZE];
+    int x;
+    int y;
+    int z;
+} Chunk;
 
 #endif

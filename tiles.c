@@ -161,6 +161,171 @@ Tile tileSAND = {
     .rule = ruleSAND
 };
 
+
+//HUMAN
+Entity human4 = {
+    .index = 4*CHUNK_WIDTH*CHUNK_HEIGHT + 4*CHUNK_HEIGHT + 4,
+    .id = 4,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human5 = {
+    .index = 5*CHUNK_WIDTH*CHUNK_HEIGHT + 5*CHUNK_HEIGHT + 5,
+    .id = 5,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human6 = {
+    .index = 6*CHUNK_WIDTH*CHUNK_HEIGHT + 6*CHUNK_HEIGHT + 6,
+    .id = 6,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human7 = {
+    .index = 7*CHUNK_WIDTH*CHUNK_HEIGHT + 7*CHUNK_HEIGHT + 7,
+    .id = 7,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human8 = {
+    .index = 8*CHUNK_WIDTH*CHUNK_HEIGHT + 8*CHUNK_HEIGHT + 8,
+    .id = 8,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human9 = {
+    .index = 9*CHUNK_WIDTH*CHUNK_HEIGHT + 9*CHUNK_HEIGHT + 9,
+    .id = 9,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+Entity human10 = {
+    .index = 10*CHUNK_WIDTH*CHUNK_HEIGHT + 10*CHUNK_HEIGHT + 10,
+    .id = 10,
+    .xDir = 0,
+    .yDir = 0,
+    .zDir = 0,
+    .moveCountdown = 0
+};
+
+Entity defaultHuman = {
+    .index = -1,
+    .id = -1,
+    .xDir = -1,
+    .yDir = -1,
+    .zDir = -1,
+    .moveCountdown = -1
+};
+
+Entity HUMANS[7];
+
+void ruleHUMAN(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+
+    //Find out what human you are
+    Entity *You = &defaultHuman;
+    for (int i = 0; i < 7; i++) {
+        if (index == HUMANS[i].index) {
+            You = &HUMANS[i]; //!!!printf("\nfound index%d, id%d", HUMANS[i].index, HUMANS[i].id);
+        }
+    }
+
+    if (You->index == -1) { //needed?
+        return;
+    }
+
+    int below = readBelow(index);
+    int tileBelow = readT(below, chunk);
+
+    if (tileBelow == AIR || tileBelow == WATER) { //if falling
+        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+        writeUpdate(HUMAN, below, updatedChunk, scheduledUpdates);
+        You->index = below;
+    
+    } else if (You->moveCountdown == 0) { //if deciding
+
+        //srand(getpid()); //use system id or something for random number idk
+        int random = rand() % 10;
+
+        if (random == 1) {
+            You->xDir = 0;
+        } else if (random == 2) { 
+            You->xDir = 1; 
+        } else if (random == 3) {
+            You->xDir = -1;
+        } else if (random == 4) {
+            You->yDir = 0;
+        } else if (random == 5) {
+            You->yDir = 1;
+        } else if (random == 6) {
+            You->yDir = -1;
+        } else if (random == 7) {
+            You->zDir = 0;
+        } else if (random == 8) {
+            You->zDir = 1;
+        } else if (random == 9) {
+            You->zDir = -1;
+        }
+
+        You->moveCountdown = 8;
+        //printf("\ndecided x%d y%d z%d", You->xDir, You->yDir, You->zDir);
+        updateT(scheduledUpdates, index);
+
+    } else {
+
+        updateT(scheduledUpdates, index);
+        You->moveCountdown--;
+        //printf("\ncountdown %d", You->moveCountdown);
+
+        int newIndex = moveIndex(index, You->xDir, You->yDir, You->zDir);
+        int newTile = readT(newIndex, chunk);
+
+        if (newTile == AIR || newTile == WATER || newTile == WOOD) {
+            writeUpdate(SMOKE, index, updatedChunk, scheduledUpdates);
+            writeUpdate(HUMAN, newIndex, updatedChunk, scheduledUpdates);
+
+            //build sand structure
+            int below = readBelow(index);
+            int tileBelow = readT(below, chunk);
+            if (tileBelow == WOOD) {
+                writeT(SAND, index, updatedChunk);
+            }
+            if (tileBelow == SAND) {
+                writeT(WOOD, index, updatedChunk);
+            }
+            if (newTile == WATER || below == STONE) {
+                writeT(WOOD, index, updatedChunk);
+            }
+            
+
+            //printf("\nm%d", newIndex);
+            You->index = newIndex;
+            
+        }
+
+    }
+    
+
+
+}
+Tile tileHUMAN = {
+    .icon = '&',
+    .name = "human",
+    .rule = ruleHUMAN
+};
+
+
 //Compile array of tiles
 void compileRules() {
     TILE_TYPES[SMOKE] = tileSMOKE;
@@ -170,4 +335,14 @@ void compileRules() {
     TILE_TYPES[MISSILE2] = tileMISSILE2;
     TILE_TYPES[WATER] = tileWATER;
     TILE_TYPES[SAND] = tileSAND;
+    TILE_TYPES[HUMAN] = tileHUMAN;
+
+    //humans
+    HUMANS[0] = human4;
+    HUMANS[1] = human5;
+    HUMANS[2] = human6;
+    HUMANS[3] = human7;
+    HUMANS[4] = human8;
+    HUMANS[5] = human9;
+    HUMANS[6] = human10;
 }
