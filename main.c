@@ -162,34 +162,14 @@ int main() {
     //render & update chunk i times
     for (int i = 0; i < 50000; i++) {
         
-        usleep(200);
-        
+        usleep(500000);
         //printMemory(startChunk);
-        
         updateWorld(WORLD, chunkUpdates);
-        
-        if (i % 50 == 0) { //every x frames
-            printChunk3d(startChunk->chunk,1);
-        }
+        printChunk3d(startChunk->chunk,1);
+
         tick++;
     }
 
-    //render & update chunk i times
-    // for (int i = 0; i < 50000; i++) {
-        
-    //     usleep(50000);
-        
-    //     //printMemory(startChunk);
-        
-    //     updateWorld(WORLD, chunkUpdates);
-        
-    //     //if (i % 300 == 0) { //every x frames
-    //         printChunk3d(startChunk->chunk,1);
-    //     //}
-    //     tick++;
-    // }
-
-    printChunk3d(startChunk->chunk,1);
 
 
     return 0;

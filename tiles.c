@@ -163,63 +163,6 @@ Tile tileSAND = {
 
 
 //HUMAN
-Entity human4 = {
-    .index = 4*CHUNK_WIDTH*CHUNK_HEIGHT + 4*CHUNK_HEIGHT + 4,
-    .id = 4,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human5 = {
-    .index = 5*CHUNK_WIDTH*CHUNK_HEIGHT + 5*CHUNK_HEIGHT + 5,
-    .id = 5,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human6 = {
-    .index = 6*CHUNK_WIDTH*CHUNK_HEIGHT + 6*CHUNK_HEIGHT + 6,
-    .id = 6,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human7 = {
-    .index = 7*CHUNK_WIDTH*CHUNK_HEIGHT + 7*CHUNK_HEIGHT + 7,
-    .id = 7,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human8 = {
-    .index = 8*CHUNK_WIDTH*CHUNK_HEIGHT + 8*CHUNK_HEIGHT + 8,
-    .id = 8,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human9 = {
-    .index = 9*CHUNK_WIDTH*CHUNK_HEIGHT + 9*CHUNK_HEIGHT + 9,
-    .id = 9,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-Entity human10 = {
-    .index = 10*CHUNK_WIDTH*CHUNK_HEIGHT + 10*CHUNK_HEIGHT + 10,
-    .id = 10,
-    .xDir = 0,
-    .yDir = 0,
-    .zDir = 0,
-    .moveCountdown = 0
-};
-
 Entity defaultHuman = {
     .index = -1,
     .id = -1,
@@ -315,8 +258,6 @@ void ruleHUMAN(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) 
         }
 
     }
-    
-
 
 }
 Tile tileHUMAN = {
@@ -324,6 +265,228 @@ Tile tileHUMAN = {
     .name = "human",
     .rule = ruleHUMAN
 };
+
+
+Mesh Donut[8] = {
+    //North is -1z, south is +1z, because screen is flipped
+    { .x= 0, .y=0, .z= -1, .length=8 }, //N
+    { .x= 1, .y=0, .z= -1 }, //NE
+    { .x= 1, .y=0, .z= 0 }, //E
+    { .x= 1, .y=0, .z= 1 }, //SE
+    { .x= 0, .y=0, .z= 1 }, //S
+    { .x= -1, .y=0, .z= 1 }, //SW
+    { .x= -1, .y=0, .z= 0 }, //W
+    { .x= -1, .y=0, .z= -1 } //NW
+};
+
+int headDirections[8] = {
+    CENTIHEAD_N,
+    CENTIHEAD_NE,
+    CENTIHEAD_E,
+    CENTIHEAD_SE,
+    CENTIHEAD_S,
+    CENTIHEAD_SW,
+    CENTIHEAD_W,
+    CENTIHEAD_NW
+};
+void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+
+    //get direction & target
+    int head = readT(index, chunk);
+    int body;
+
+    //get next space
+    int targetIndex = index;
+    int nextTarget;
+
+    switch (head) {
+
+        case CENTIHEAD_N:
+            body = CENTIBODY_N;
+            targetIndex = moveIndexZ(index, -1);
+            nextTarget = moveIndexZ(targetIndex, -1);
+            break;
+
+        case CENTIHEAD_S:
+            body = CENTIBODY_S;
+            targetIndex = moveIndexZ(index, 1);
+            nextTarget = moveIndexZ(targetIndex, 1);
+            break;
+
+        case CENTIHEAD_E:
+            body = CENTIBODY_E;
+            targetIndex = moveIndexX(index,1);
+            nextTarget = moveIndexX(targetIndex, 1);
+            break;
+
+        case CENTIHEAD_W:
+            body = CENTIBODY_W;
+            targetIndex = moveIndexX(index, -1);
+            nextTarget = moveIndexX(targetIndex, -1);
+            break;
+        
+        case CENTIHEAD_NE:
+            body = CENTIBODY_NE;
+            targetIndex = moveIndex(index, 1, 0, -1);
+            nextTarget = moveIndex(targetIndex, 1, 0, -1);
+            break;
+
+        case CENTIHEAD_NW:
+            body = CENTIBODY_NW;
+            targetIndex = moveIndex(index, -1, 0, -1);
+            nextTarget = moveIndex(targetIndex, -1, 0, -1);
+            break;
+
+        case CENTIHEAD_SE:
+            body = CENTIBODY_SE;
+            targetIndex = moveIndex(index, 1, 0, 1);
+            nextTarget = moveIndex(targetIndex, 1, 0, 1);
+            break;
+        
+        case CENTIHEAD_SW:
+            body = CENTIBODY_SW;
+            targetIndex = moveIndex(index, -1, 0, 1);
+            nextTarget = moveIndex(targetIndex, -1, 0, 1);
+            break;
+    }
+    
+    //set new head
+    if (readT(targetIndex, chunk) == AIR) { //if next space is AIR
+
+        //move head & body forwards
+        writeUpdate(body, index, updatedChunk, scheduledUpdates);
+
+        if (readT(nextTarget, chunk) != AIR) { //if space after next is air
+            //detect where the head should turn
+            //create mesh of free spaces
+            int directions[8];
+            getMeshIndexes(targetIndex, Donut, directions);
+            int newHead;
+
+            //for each space in the mesh
+            for (int i = 0; i < 8; i++) {
+                if (readT(directions[i],chunk) == AIR) {
+
+                    //turn head
+                    newHead = headDirections[i];
+
+                }
+            }
+            writeUpdate(newHead, targetIndex, updatedChunk, scheduledUpdates);
+        } else {
+            writeUpdate(head, targetIndex, updatedChunk, scheduledUpdates);
+        }
+
+        
+        
+    }
+    
+    //turn head towards free space
+    else {
+        //die?
+    }
+
+}
+Tile tileCENTIHEAD = {
+    .icon = 'O',
+    .name = "centipede",
+    .rule = ruleCENTIHEAD
+};
+
+
+int tailDirections[8] = {
+    CENTITAIL_N,
+    CENTITAIL_NE,
+    CENTITAIL_E,
+    CENTITAIL_SE,
+    CENTITAIL_S,
+    CENTITAIL_SW,
+    CENTITAIL_W,
+    CENTITAIL_NW
+};
+int bodyDirections[8] = {
+    CENTIBODY_N,
+    CENTIBODY_NE,
+    CENTIBODY_E,
+    CENTIBODY_SE,
+    CENTIBODY_S,
+    CENTIBODY_SW,
+    CENTIBODY_W,
+    CENTIBODY_NW
+};
+void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+
+    //get direction & target
+    int tail = readT(index, chunk);
+
+    //get next space
+    int targetIndex = index;
+
+    switch (tail) {
+
+        case CENTITAIL_N:
+            targetIndex = moveIndexZ(index, -1);
+            break;
+
+        case CENTITAIL_S:
+            targetIndex = moveIndexZ(index, 1);
+            break;
+
+        case CENTITAIL_E:
+            targetIndex = moveIndexX(index,1);
+            break;
+
+        case CENTITAIL_W:
+            targetIndex = moveIndexX(index, -1);
+            break;
+        
+        case CENTITAIL_NE:
+            targetIndex = moveIndex(index, 1, 0, -1);
+            break;
+
+        case CENTITAIL_NW:
+            targetIndex = moveIndex(index, -1, 0, -1);
+            break;
+
+        case CENTITAIL_SE:
+            targetIndex = moveIndex(index, 1, 0, 1);
+            break;
+        
+        case CENTITAIL_SW:
+            targetIndex = moveIndex(index, -1, 0, 1);
+            break;
+    }
+
+    //set new tail
+    int newTail;
+    int pointingTo = readT(targetIndex, chunk);
+    if (pointingTo >= CENTIBODY_N && pointingTo <= CENTIBODY_SW) { //if pointing to CENTIBODY
+
+        for (int i = 0; i < 8; i++) {
+
+            if (pointingTo == bodyDirections[i]) { //find direction of body
+
+                newTail = tailDirections[i]; //set tail to that direction
+            }
+
+        }
+        writeUpdate(newTail, targetIndex, updatedChunk, scheduledUpdates);
+        
+        //turn OG tail into air
+        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+    } else {
+        updateT(scheduledUpdates, index); //should die?
+    }
+
+    
+
+}
+Tile tileCENTITAIL = {
+    .icon = '[',
+    .name = "centipede",
+    .rule = ruleCENTITAIL
+};
+
 
 
 //Compile array of tiles
@@ -337,12 +500,36 @@ void compileRules() {
     TILE_TYPES[SAND] = tileSAND;
     TILE_TYPES[HUMAN] = tileHUMAN;
 
-    //humans
-    HUMANS[0] = human4;
-    HUMANS[1] = human5;
-    HUMANS[2] = human6;
-    HUMANS[3] = human7;
-    HUMANS[4] = human8;
-    HUMANS[5] = human9;
-    HUMANS[6] = human10;
+    TILE_TYPES[CENTIHEAD_N] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_S] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_E] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_W] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_NE] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_NW] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_SE] = tileCENTIHEAD;
+    TILE_TYPES[CENTIHEAD_SW] = tileCENTIHEAD;
+
+    TILE_TYPES[CENTITAIL_N] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_S] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_E] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_W] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_NE] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_NW] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_SE] = tileCENTITAIL;
+    TILE_TYPES[CENTITAIL_SW] = tileCENTITAIL;
+
+    // //initialize humans
+    // int humanCount = 7;
+    // for (int i = 0; i < humanCount; i++) {
+
+    //     Entity human;
+    //     human.id = i + 4;
+    //     human.index = human.id*CHUNK_WIDTH*CHUNK_HEIGHT + human.id*CHUNK_HEIGHT + human.id;
+    //     human.moveCountdown = 0;
+    //     human.xDir = 0;
+    //     human.yDir = 0;
+    //     human.zDir = 0;
+
+    //     HUMANS[i] = human;
+    // }
 }

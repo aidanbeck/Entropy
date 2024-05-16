@@ -8,6 +8,7 @@ void createBorder(Chunk *CHUNK) {
     fillTile(tiles, AIR, 1, 1, 1, 15, 15, 15);
 }
 
+
 void mapTower(Chunk *CHUNK) {
 
     int *chunk = CHUNK->chunk; //normally I should probably call this tiles?
@@ -40,7 +41,7 @@ void mapTower(Chunk *CHUNK) {
     //fillTile(chunk, SAND, 7, 5, 7, 10, 15, 10);
 
     //wooden floor
-    fillTile(chunk, WOOD, 1, 14, 1, 5, 15, 5);
+    //fillTile(chunk, WOOD, 1, 14, 1, 5, 15, 5);
     // fillTile(chunk, WATER, 2, 14, 2, 4, 15, 4);
 
     //friendly missile
@@ -48,13 +49,36 @@ void mapTower(Chunk *CHUNK) {
     //addTile(chunk, MISSILE2, 13, 10, 14);
 
     //traveler
-    addTile(chunk, HUMAN, 4, 4, 4);
-    addTile(chunk, HUMAN, 5, 5, 5);
-    addTile(chunk, HUMAN, 6, 6, 6);
-    addTile(chunk, HUMAN, 7, 7, 7);
-    addTile(chunk, HUMAN, 8, 8, 8);
-    addTile(chunk, HUMAN, 9, 9, 9);
-    addTile(chunk, HUMAN, 10, 10, 10);
+    // addTile(chunk, HUMAN, 4, 4, 4);
+    // addTile(chunk, HUMAN, 5, 5, 5);
+    // addTile(chunk, HUMAN, 6, 6, 6);
+    // addTile(chunk, HUMAN, 7, 7, 7);
+    // addTile(chunk, HUMAN, 8, 8, 8);
+    // addTile(chunk, HUMAN, 9, 9, 9);
+    // addTile(chunk, HUMAN, 10, 10, 10);
+
+    addTile(chunk, CENTIHEAD_E, 8, 14, 10); addUpdate(updates, 8, 14, 10);
+    addTile(chunk, CENTIBODY_S, 8, 14, 9);
+    addTile(chunk, CENTIBODY_S, 8, 14, 8);
+    addTile(chunk, CENTIBODY_S, 8, 14, 7);
+    addTile(chunk, CENTIBODY_S, 8, 14, 6);
+    addTile(chunk, CENTIBODY_S, 8, 14, 5);
+    addTile(chunk, CENTIBODY_S, 8, 14, 4);
+    addTile(chunk, CENTIBODY_S, 8, 14, 3);
+    addTile(chunk, CENTITAIL_S, 8, 14, 2); addUpdate(updates, 8, 14, 2);
+
+
+    addTile(chunk, CENTIHEAD_SE, 10, 14, 10); addUpdate(updates, 10, 14, 10);
+    addTile(chunk, CENTIBODY_S, 10, 14, 9);
+    addTile(chunk, CENTIBODY_S, 10, 14, 8);
+    addTile(chunk, CENTIBODY_S, 10, 14, 7);
+    addTile(chunk, CENTIBODY_S, 10, 14, 6);
+    addTile(chunk, CENTIBODY_S, 10, 14, 5);
+    addTile(chunk, CENTIBODY_S, 10, 14, 4);
+    addTile(chunk, CENTIBODY_S, 10, 14, 3);
+    addTile(chunk, CENTITAIL_S, 10, 14, 2); addUpdate(updates, 10, 14, 2);
+
+    //addTile(chunk, SAND, 6, 14, 10);
 
     //tile updates
     addUpdate(updates, 12, 13, 12);
