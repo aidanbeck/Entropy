@@ -152,20 +152,15 @@ int main() {
     Chunk *startChunk = &WORLD[0]; //create example chunk
     chunkUpdates[0] = 1; //turn on example chunk
     createBorder(startChunk);
-    mapTower(startChunk);
-
-    Chunk *startChunk1 = &WORLD[1]; //create example chunk
-    chunkUpdates[1] = 1; //turn on example chunk
-    createBorder(startChunk1);
-    mapTower(startChunk1);
+    mapSnek(startChunk);
 
     //render & update chunk i times
     for (int i = 0; i < 50000; i++) {
         
-        usleep(500000);
+        usleep(300000);
         //printMemory(startChunk);
         updateWorld(WORLD, chunkUpdates);
-        printChunk3d(startChunk->chunk,1);
+        printChunk2d(startChunk->chunk);
 
         tick++;
     }

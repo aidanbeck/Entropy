@@ -3,3 +3,4 @@
 
 void createBorder(Chunk *CHUNK);
 void mapTower(Chunk *CHUNK);
+void mapSnek(Chunk *CHUNK);

@@ -67,6 +67,23 @@ void printChunk(int *chunk/*, int *tileUpdates*/) {
     }
 }
 
+void printChunk2d(int *chunk) {
+
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+    for (int i = 0; i < CHUNK_LENGTH; i++) {
+        for (int j = 0; j < CHUNK_WIDTH; j++) {
+
+            int tile = chunk[i*CHUNK_LENGTH + j];
+            char icon = symbols[tile];
+
+            printf("%c", icon);
+        }
+        printf("\n");
+    }
+    
+}
+
 
 void initializeString(char *array, int length, int lineLength, char value) {
 
@@ -95,7 +112,7 @@ void printChunk3d(int *chunk, int isometric) {
             for (int x = 0; x < CHUNK_LENGTH; x++) {    //can add x or y offset to CHUNK_LENGTH and CHUNK_WIDTH
 
                 int tile = getTile(chunk, x, y, z);
-                if (tile != AIR && tile != STONE) {
+                if (tile != AIR /*&& tile != STONE*/) {
 
                     if (isometric == 1) {
                         frame[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = symbols[tile]; //isometric
