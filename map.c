@@ -1,5 +1,34 @@
 #include "main.h"
 
+int getIndex(int x, int y, int z) { //useful example of chunk navigation
+
+    x = x;
+    y = y * CHUNK_WIDTH * CHUNK_LENGTH;
+    z = z * CHUNK_WIDTH;
+
+    return x + y + z;
+}
+
+void addTile(int *chunk, int tile, int x, int y, int z) {
+    int i = getIndex(x,y,z);
+    chunk[i] = tile;
+}
+
+void addUpdate(int *updates, int x, int y, int z) {
+    int i = getIndex(x,y,z);
+    updates[i] = 1;
+}
+
+void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
+    for (int i = x1; i <= x2; i++) {
+        for (int j = y1; j <= y2; j++) {
+            for (int a = z1; a <= z2; a++) {
+                addTile(chunk, tile, i, j, a);
+            }
+        }
+    }
+}
+
 void createBorder(Chunk *CHUNK) {
 
     int *tiles = CHUNK->chunk;

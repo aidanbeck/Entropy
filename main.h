@@ -26,9 +26,6 @@
 
 //Main Functions
 void initializeArray(int *array, int length, int value);
-void addTile(int *chunk, int tile, int x, int y, int z);
-void addUpdate(int *tileUpdates, int x, int y, int z);
-void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2);
 void registerUpdate(int *newUpdates, int index);
 
 //Tile Dictionary
