@@ -10,7 +10,7 @@
 #define TICK_DURATION 300000
 
 //Chunk Scaling
-#define CHUNK_LENGTH 10
+#define CHUNK_LENGTH 16
 #define CHUNK_WIDTH 16
 #define CHUNK_HEIGHT 1
 #define CHUNK_SIZE (CHUNK_LENGTH * CHUNK_WIDTH * CHUNK_HEIGHT)
@@ -68,6 +68,15 @@ enum Tiles {
     CENTITAIL_NW,
     CENTITAIL_SE,
     CENTITAIL_SW,
+
+    BALL_N,
+    BALL_NE,
+    BALL_E,
+    BALL_SE,
+    BALL_S,
+    BALL_SW,
+    BALL_W,
+    BALL_NW,
     
 
     TILE_TYPE_COUNT

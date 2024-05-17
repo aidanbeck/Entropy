@@ -269,14 +269,14 @@ Tile tileHUMAN = {
 
 Mesh Donut[8] = {
     //North is -1z, south is +1z, because screen is flipped
-    { .x= 0, .y=0, .z= -1, .length=8 }, //N
-    { .x= 1, .y=0, .z= -1 }, //NE
+    { .x= 0, .y=0, .z= 1, .length=8 }, //N
+    { .x= 1, .y=0, .z= 1 }, //NE
     { .x= 1, .y=0, .z= 0 }, //E
-    { .x= 1, .y=0, .z= 1 }, //SE
-    { .x= 0, .y=0, .z= 1 }, //S
-    { .x= -1, .y=0, .z= 1 }, //SW
+    { .x= 1, .y=0, .z= -1 }, //SE
+    { .x= 0, .y=0, .z= -1 }, //S
+    { .x= -1, .y=0, .z= -1 }, //SW
     { .x= -1, .y=0, .z= 0 }, //W
-    { .x= -1, .y=0, .z= -1 } //NW
+    { .x= -1, .y=0, .z= 1 } //NW
 };
 
 int headDirections[8] = {
@@ -425,11 +425,11 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
     switch (tail) {
 
         case CENTITAIL_N:
-            targetIndex = moveIndexZ(index, -1);
+            targetIndex = moveIndexZ(index, 1);
             break;
 
         case CENTITAIL_S:
-            targetIndex = moveIndexZ(index, 1);
+            targetIndex = moveIndexZ(index, -1);
             break;
 
         case CENTITAIL_E:
@@ -441,19 +441,19 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
             break;
         
         case CENTITAIL_NE:
-            targetIndex = moveIndex(index, 1, 0, -1);
+            targetIndex = moveIndex(index, 1, 0, 1);
             break;
 
         case CENTITAIL_NW:
-            targetIndex = moveIndex(index, -1, 0, -1);
+            targetIndex = moveIndex(index, -1, 0, 1);
             break;
 
         case CENTITAIL_SE:
-            targetIndex = moveIndex(index, 1, 0, 1);
+            targetIndex = moveIndex(index, 1, 0, -1);
             break;
         
         case CENTITAIL_SW:
-            targetIndex = moveIndex(index, -1, 0, 1);
+            targetIndex = moveIndex(index, -1, 0, -1);
             break;
     }
 
@@ -488,6 +488,41 @@ Tile tileCENTITAIL = {
 };
 
 
+//BALL
+int ballDirections[8] = {
+    BALL_N,
+    BALL_NE,
+    BALL_E,
+    BALL_SE,
+    BALL_S,
+    BALL_SW,
+    BALL_W,
+    BALL_NW
+};
+void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+
+    int nextIndex = index;
+
+    //nextIndex = moveIndexX(index, -1);
+    nextIndex = moveIndex(index, -1, 0, -1);
+
+    int tileAtNextIndex = readT(nextIndex, chunk);
+
+    if (tileAtNextIndex == AIR) {
+        writeUpdate(BALL_N, nextIndex, updatedChunk, scheduledUpdates);
+        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+    }
+
+    
+
+
+}
+Tile tileBALL = {
+    .icon = 'O',
+    .name = "ball",
+    .rule = ruleBALL
+};
+
 
 //Compile array of tiles
 void compileRules() {
@@ -518,18 +553,23 @@ void compileRules() {
     TILE_TYPES[CENTITAIL_SE] = tileCENTITAIL;
     TILE_TYPES[CENTITAIL_SW] = tileCENTITAIL;
 
-    // //initialize humans
-    // int humanCount = 7;
-    // for (int i = 0; i < humanCount; i++) {
+    TILE_TYPES[BALL_N] = tileBALL;
+    TILE_TYPES[BALL_S] = tileBALL;
+    TILE_TYPES[BALL_E] = tileBALL;
+    TILE_TYPES[BALL_W] = tileBALL;
 
-    //     Entity human;
-    //     human.id = i + 4;
-    //     human.index = human.id*CHUNK_WIDTH*CHUNK_HEIGHT + human.id*CHUNK_HEIGHT + human.id;
-    //     human.moveCountdown = 0;
-    //     human.xDir = 0;
-    //     human.yDir = 0;
-    //     human.zDir = 0;
+    //initialize humans
+    int humanCount = 7;
+    for (int i = 0; i < humanCount; i++) {
 
-    //     HUMANS[i] = human;
-    // }
+        Entity human;
+        human.id = i + 4;
+        human.index = human.id*CHUNK_WIDTH*CHUNK_HEIGHT + human.id*CHUNK_HEIGHT + human.id;
+        human.moveCountdown = 0;
+        human.xDir = 0;
+        human.yDir = 0;
+        human.zDir = 0;
+
+        HUMANS[i] = human;
+    }
 }

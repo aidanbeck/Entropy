@@ -29,14 +29,16 @@ void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int 
     }
 }
 
+/*
+    Creates a border of STONE that is filled with AIR.
+    
+*/
 void createBorder(Chunk *CHUNK) {
 
     int *tiles = CHUNK->chunk;
 
-    fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH, CHUNK_HEIGHT, CHUNK_LENGTH);
-    fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-1, CHUNK_HEIGHT, CHUNK_LENGTH-1);
-
-    fillTile(tiles, WOOD, 0,0,0, 8,0,1);
+    fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH-1, CHUNK_HEIGHT, CHUNK_LENGTH-1);
+    fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-2, CHUNK_HEIGHT, CHUNK_LENGTH-2);
 }
 
 
@@ -45,7 +47,7 @@ void mapSnek(Chunk *CHUNK) {
     int *chunk = CHUNK->chunk; //normally I should probably call this tiles?
     int *updates = CHUNK->updates;
 
-    addTile(chunk, CENTIHEAD_W, 8, 0, 5); addUpdate(updates, 8, 0, 5);
+    addTile(chunk, CENTIHEAD_S, 8, 0, 5); addUpdate(updates, 8, 0, 5);
     addTile(chunk, CENTIBODY_S, 8, 0, 4);
     addTile(chunk, CENTIBODY_S, 8, 0, 3);
     addTile(chunk, CENTITAIL_S, 8, 0, 2); addUpdate(updates, 8, 0, 2);
@@ -53,10 +55,12 @@ void mapSnek(Chunk *CHUNK) {
     
     //  +
     // +++
-    // addTile(chunk, WOOD, 0, 0, 0);
-    // addTile(chunk, WOOD, 1, 0, 0);
-    // addTile(chunk, WOOD, 2, 0, 0);
-    // addTile(chunk, WOOD, 1, 0, 1);
+    addTile(chunk, WOOD, 0, 0, 0);
+    addTile(chunk, WOOD, 1, 0, 0);
+    addTile(chunk, WOOD, 2, 0, 0);
+    addTile(chunk, WOOD, 1, 0, 1);
+
+    fillTile(chunk, WOOD, 0,0,0, 8,0,0);
 
 }
 

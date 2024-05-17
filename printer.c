@@ -40,6 +40,15 @@ char symbols[] = {
     '[',
     '[',
     '[',
+
+    'O',
+    'O',
+    'O',
+    'O',
+    'O',
+    'O',
+    'O',
+    'O',
 };
 
 //prints a representation of the chunk to console (vertical slice)
