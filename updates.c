@@ -74,3 +74,24 @@ int updateChunk(Chunk *CHUNK) {
 
     return shouldUpdateChunk;
 }
+
+void updateWorld(Chunk *WORLD, int *chunkUpdates) {
+
+    int scheduledUpdates[WORLD_SIZE]; initializeArray(scheduledUpdates, WORLD_SIZE, 0); //list chunks that get updates. 0 means don't update, 1 means do.
+
+    //update all chunks that have updates scheduled
+    for (int i = 0; i < WORLD_SIZE; i++) {
+        if (chunkUpdates[i] == 1) {
+
+            Chunk *toUpdate = &WORLD[i];
+            scheduledUpdates[i] = updateChunk(toUpdate);
+            
+        }
+    }
+
+    //add new scheduled updates to updates list for the next tick
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        chunkUpdates[i] = scheduledUpdates[i];
+    }
+
+}
