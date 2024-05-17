@@ -7,8 +7,13 @@
 #include "tiles.h"
 #include "tools.h"
 
-int getIndex(int x, int y, int z) { //needs to be audited
-    return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
+int getIndex(int x, int y, int z) {
+
+    x = x;
+    y = y * CHUNK_WIDTH * CHUNK_LENGTH;
+    z = z * CHUNK_WIDTH;
+
+    return x + y + z;
 }
 
 void addTile(int *chunk, int tile, int x, int y, int z) {

@@ -94,7 +94,7 @@ void printUpdates2d(int *tileUpdates) {
     }
 }
 
-int getTile(int *chunk, int x, int y,  int z) { //used in 3d printer
+int getTile(int *chunk, int x, int y,  int z) { //used in 3d printer, doesn't work right with non cubic chunks
     return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
 }
 
