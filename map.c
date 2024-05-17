@@ -12,6 +12,7 @@ int getIndex(int x, int y, int z) { //useful example of chunk navigation
 void addTile(int *chunk, int tile, int x, int y, int z) {
     int i = getIndex(x,y,z);
     chunk[i] = tile;
+    jsWriteIcon(i,tile);
 }
 
 void addUpdate(int *updates, int x, int y, int z) {

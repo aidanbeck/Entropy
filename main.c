@@ -37,7 +37,7 @@ int main() {
     mapSnek(startChunk);
 
     //render & update chunk i times
-    for (int i = 0; i < TICK_LIMIT; i++) {
+    for (int i = 0; i < 2; i++) {
         
         printf("\n\n---------------------Tick %d---------------------", tick);
         printChunk2d(startChunk->chunk);
