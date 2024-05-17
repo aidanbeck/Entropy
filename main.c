@@ -7,31 +7,21 @@
 #include "tiles.h"
 #include "tools.h"
 
-int getIndex(int x, int y, int z) {
+int getIndex(int x, int y, int z) { //needs to be audited
     return z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x;
 }
 
-void getCoordinates(int index, int *x, int *y, int *z) {
-    *z = index / (CHUNK_WIDTH * CHUNK_HEIGHT);
-    int remainder = index % (CHUNK_WIDTH * CHUNK_HEIGHT);
-    *y = remainder / CHUNK_HEIGHT;
-    *x = remainder % CHUNK_HEIGHT;
-}
-
-int getTile(int *chunk, int x, int y,  int z) {
-    return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
-}
-
 void addTile(int *chunk, int tile, int x, int y, int z) {
-    chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x] = tile;
-}
-
-void addUpdate(int *tileUpdates, int x, int y, int z) {
     int i = getIndex(x,y,z);
-    tileUpdates[i] = 1;
+    chunk[i] = tile;
 }
 
-void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
+void addUpdate(int *updates, int x, int y, int z) {
+    int i = getIndex(x,y,z);
+    updates[i] = 1;
+}
+
+void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) { //audit. Does this place them AT both coordinates, or between? Should be at.
     for (int i = x1; i < x2; i++) {
         for (int j = y1; j < y2; j++) {
             for (int a = z1; a < z2; a++) {
@@ -45,10 +35,10 @@ void registerUpdate(int *newUpdates, int index) {
     newUpdates[index] = 1;              //self
     newUpdates[index-1] = 1;            //left
     newUpdates[index+1] = 1;            //right
-    newUpdates[index-CHUNK_LENGTH] = 1; //up
-    newUpdates[index+CHUNK_LENGTH] = 1; //down
-    newUpdates[index+CHUNK_LENGTH*CHUNK_HEIGHT] = 1; //forwards
-    newUpdates[index-CHUNK_LENGTH*CHUNK_HEIGHT] = 1; //backwards
+    //newUpdates[index-CHUNK_LENGTH] = 1; //up  //commented out because they will break 2D mode
+    //newUpdates[index+CHUNK_LENGTH] = 1; //down
+    newUpdates[index+CHUNK_WIDTH*CHUNK_HEIGHT] = 1; //forwards
+    newUpdates[index-CHUNK_WIDTH*CHUNK_HEIGHT] = 1; //backwards
 }
 
 //the rules for each tile
@@ -145,29 +135,25 @@ int main() {
 
         WORLD[i] = newChunk;
     }
+    Chunk *startChunk = &WORLD[0]; //create example chunk
+    chunkUpdates[0] = 1; //turn on example chunk
+
 
     int tick = 0;
     compileRules();
-
-    Chunk *startChunk = &WORLD[0]; //create example chunk
-    chunkUpdates[0] = 1; //turn on example chunk
     createBorder(startChunk);
     mapSnek(startChunk);
 
     //render & update chunk i times
-    for (int i = 0; i < 50000; i++) {
+    for (int i = 0; i < TICK_LIMIT; i++) {
         
-        usleep(300000);
-        updateWorld(WORLD, chunkUpdates);
-
         printf("\n\n---------------------Tick %d---------------------", tick);
-
         printChunk2d(startChunk->chunk);
         printUpdates2d(startChunk->updates);
-        //printMemory(startChunk);
 
-
+        updateWorld(WORLD, chunkUpdates);
         tick++;
+        usleep(TICK_DURATION);
     }
 
 

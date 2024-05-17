@@ -94,8 +94,9 @@ void printUpdates2d(int *tileUpdates) {
     }
 }
 
-//chunk[z*CHUNK_WIDTH + x] <-- AHHH
-
+int getTile(int *chunk, int x, int y,  int z) { //used in 3d printer
+    return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
+}
 
 void initializeString(char *array, int length, int lineLength, char value) {
 

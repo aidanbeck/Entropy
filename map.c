@@ -6,8 +6,6 @@ void createBorder(Chunk *CHUNK) {
 
     fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH, CHUNK_HEIGHT, CHUNK_LENGTH);
     fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-1, CHUNK_HEIGHT, CHUNK_LENGTH-1);
-
-    addTile(tiles, WOOD, 1, 0, 1);
 }
 
 
@@ -20,6 +18,16 @@ void mapSnek(Chunk *CHUNK) {
     addTile(chunk, CENTIBODY_S, 8, 0, 4);
     addTile(chunk, CENTIBODY_S, 8, 0, 3);
     addTile(chunk, CENTITAIL_S, 8, 0, 2); addUpdate(updates, 8, 0, 2);
+
+    
+    //  +
+    // +++
+    addTile(chunk, WOOD, 0, 0, 0);
+    addTile(chunk, WOOD, 1, 0, 0);
+    addTile(chunk, WOOD, 2, 0, 0);
+    addTile(chunk, CENTITAIL_N, 1, 0, 1);
+
+    addUpdate(updates, 1, 0, 1);
 
 }
 
