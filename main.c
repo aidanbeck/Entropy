@@ -26,10 +26,10 @@ void addUpdate(int *updates, int x, int y, int z) {
     updates[i] = 1;
 }
 
-void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) { //audit. Does this place them AT both coordinates, or between? Should be at.
-    for (int i = x1; i < x2; i++) {
-        for (int j = y1; j < y2; j++) {
-            for (int a = z1; a < z2; a++) {
+void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
+    for (int i = x1; i <= x2; i++) {
+        for (int j = y1; j <= y2; j++) {
+            for (int a = z1; a <= z2; a++) {
                 addTile(chunk, tile, i, j, a);
             }
         }
