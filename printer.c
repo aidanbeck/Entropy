@@ -69,20 +69,32 @@ void printChunk(int *chunk/*, int *tileUpdates*/) {
 
 void printChunk2d(int *chunk) {
 
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-
-    for (int i = 0; i < CHUNK_LENGTH; i++) {
+    printf("\n\n---2d Render---\n");
+    for (int i = CHUNK_LENGTH-1; i > -1; i--) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
         for (int j = 0; j < CHUNK_WIDTH; j++) {
-
-            int tile = chunk[i*CHUNK_LENGTH + j];
+            int tile = chunk[i*CHUNK_WIDTH + j];
             char icon = symbols[tile];
 
             printf("%c", icon);
         }
-        printf("\n");
+        printf(" %d\n",i);
     }
-    
 }
+
+void printUpdates2d(int *tileUpdates) {
+
+    printf("\n\n---2d Updates---\n");
+    for (int i = CHUNK_LENGTH-1; i > -1; i--) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
+        for (int j = 0; j < CHUNK_WIDTH; j++) {
+
+            int update = tileUpdates[i*CHUNK_WIDTH + j];
+            printf("%d", update);
+        }
+        printf(" %d\n",i);
+    }
+}
+
+//chunk[z*CHUNK_WIDTH + x] <-- AHHH
 
 
 void initializeString(char *array, int length, int lineLength, char value) {
@@ -131,19 +143,27 @@ void printChunk3d(int *chunk, int isometric) {
     printf("%s", frame);
 }
 
-void printMemory(Chunk *CHUNK) {
+void dumpIcons(int *chunk) {
+    //Dump all map icons (don't organize)
+    printf("\n\n---Icon Dump---\n");
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        int tile = chunk[i];
+        char icon = symbols[tile];
+        printf("%c", icon);
+    }
+}
 
+void dumpMemory(Chunk *CHUNK) {
+
+    printf("\n\n---Memory Dump---\n");
     for (int i = 0; i < CHUNK_SIZE; i++) {
         printf("%d", CHUNK->chunk[i]);
     }
-    printf("\n---\n");
+
+    printf("\n\n---Updates Dump---\n");
     for (int i = 0; i < CHUNK_SIZE; i++) {
         printf("%d", CHUNK->updates[i]);
     }
-    printf("\n---\n");
-    int x = CHUNK->x;
-    int y = CHUNK->y;
-    int z = CHUNK->z;
-    printf("%d,%d,%d.\n", x, y, z);
+
 
 }

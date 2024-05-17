@@ -6,6 +6,8 @@ void createBorder(Chunk *CHUNK) {
 
     fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH, CHUNK_HEIGHT, CHUNK_LENGTH);
     fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-1, CHUNK_HEIGHT, CHUNK_LENGTH-1);
+
+    addTile(tiles, WOOD, 1, 0, 1);
 }
 
 
@@ -14,12 +16,7 @@ void mapSnek(Chunk *CHUNK) {
     int *chunk = CHUNK->chunk; //normally I should probably call this tiles?
     int *updates = CHUNK->updates;
 
-    addTile(chunk, CENTIHEAD_E, 8, 0, 10); addUpdate(updates, 8, 0, 10);
-    addTile(chunk, CENTIBODY_S, 8, 0, 9);
-    addTile(chunk, CENTIBODY_S, 8, 0, 8);
-    addTile(chunk, CENTIBODY_S, 8, 0, 7);
-    addTile(chunk, CENTIBODY_S, 8, 0, 6);
-    addTile(chunk, CENTIBODY_S, 8, 0, 5);
+    addTile(chunk, CENTIHEAD_W, 8, 0, 5); addUpdate(updates, 8, 0, 5);
     addTile(chunk, CENTIBODY_S, 8, 0, 4);
     addTile(chunk, CENTIBODY_S, 8, 0, 3);
     addTile(chunk, CENTITAIL_S, 8, 0, 2); addUpdate(updates, 8, 0, 2);

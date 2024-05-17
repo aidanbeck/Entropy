@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 //Chunk Scaling
-#define CHUNK_LENGTH 30
-#define CHUNK_WIDTH 30
+#define CHUNK_LENGTH 10
+#define CHUNK_WIDTH 16
 #define CHUNK_HEIGHT 1
 #define CHUNK_SIZE (CHUNK_LENGTH * CHUNK_WIDTH * CHUNK_HEIGHT)
 

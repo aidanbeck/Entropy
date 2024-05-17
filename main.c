@@ -158,9 +158,14 @@ int main() {
     for (int i = 0; i < 50000; i++) {
         
         usleep(300000);
-        //printMemory(startChunk);
         updateWorld(WORLD, chunkUpdates);
+
+        printf("\n\n---------------------Tick %d---------------------", tick);
+
         printChunk2d(startChunk->chunk);
+        printUpdates2d(startChunk->updates);
+        //printMemory(startChunk);
+
 
         tick++;
     }

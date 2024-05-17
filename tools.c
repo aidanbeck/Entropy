@@ -32,23 +32,25 @@ int moveIndexX(int index, int x) {
     return index;
 }
 
+
 //move Index Y
-int moveIndexY(int index, int y) {
-    index -= CHUNK_LENGTH * y;
+int moveIndexZ(int index, int y) {
+    index += (CHUNK_LENGTH*CHUNK_HEIGHT) * y;
     return index;
 }
 
 //move Index Z
-int moveIndexZ(int index, int z) {
-    index += (CHUNK_LENGTH*CHUNK_HEIGHT) * z;
+int moveIndexY(int index, int z) {
+    index -= CHUNK_WIDTH * z;
     return index;
 }
+
 
 //moveIndex
 int moveIndex(int index, int x, int y, int z) { //can optimize by doing seperate functions per axis
 
     index += x;
-    index -= CHUNK_LENGTH * y;
+    index -= CHUNK_WIDTH * y;
     index += (CHUNK_LENGTH*CHUNK_HEIGHT) * z;
 
     return index;
