@@ -15,6 +15,10 @@ void initializeArray(int *array, int length, int value) {
 /*
     Adds the index in each direction to the "scheduledUpdates" array.
     This should probably use a mesh instead, because it breaks if it hits a border.
+
+    This does not utilize the new directional standards.
+    Also, I'm pretty sure the "forwards" and "backwards" are just wrong?
+    Not going to mess with this for now, but it will be rewritten.
 */
 void registerUpdate(int *newUpdates, int index) {
     newUpdates[index] = 1;              //self

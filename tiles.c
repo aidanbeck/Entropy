@@ -268,15 +268,24 @@ Tile tileFIRE2 = {
 
 
 Mesh Donut[8] = {
-    //North is -1z, south is +1z, because screen is flipped
-    { .x= 0, .y=0, .z= 1, .length=8 }, //N
-    { .x= 1, .y=0, .z= 1 }, //NE
-    { .x= 1, .y=0, .z= 0 }, //E
-    { .x= 1, .y=0, .z= -1 }, //SE
-    { .x= 0, .y=0, .z= -1 }, //S
-    { .x= -1, .y=0, .z= -1 }, //SW
-    { .x= -1, .y=0, .z= 0 }, //W
-    { .x= -1, .y=0, .z= 1 } //NW
+    { .x= 0,    .y= -1,     .z= 0, .length=8 }, //N
+    { .x= 1,    .y= -1,     .z= 0 }, //NE
+    { .x= 1,    .y= 0,      .z= 0 }, //E
+    { .x= 1,    .y= 1,      .z= 0 }, //SE
+    { .x= 0,    .y= 1,      .z= 0 }, //S
+    { .x= -1,   .y= 1,      .z= 0 }, //SW
+    { .x= -1,   .y= 0,      .z= 0 }, //W
+    { .x= -1,   .y= -1,      .z= 0 } //NW
+};
+Mesh DonutInverted[8] = {
+    { .x= 0,    .y= 1,     .z= 0, .length=8 }, //N opposite
+    { .x= -1,    .y= 1,     .z= 0 }, //NE  opposite
+    { .x= -1,    .y= 0,      .z= 0 }, //E  opposite
+    { .x= -1,    .y= -1,      .z= 0 }, //SE  opposite
+    { .x= 0,    .y= -1,      .z= 0 }, //S  opposite
+    { .x= 1,   .y= -1,      .z= 0 }, //SW  opposite
+    { .x= 1,   .y= 0,      .z= 0 }, //W  opposite
+    { .x= 1,   .y= 1,      .z= 0 } //NW  opposite
 };
 
 int headDirections[8] = {
@@ -491,20 +500,32 @@ Tile tileCENTITAIL = {
 //BALL
 void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
 
-    int nextIndex = index;
+    //set self to air
+    //writeUpdate(AIR, index, updatedChunk, scheduledUpdates); //comment this out for a cool effect!
 
-    //nextIndex = moveIndexX(index, -1);
-    nextIndex = moveIndex(index, -1, 0, -1);
+    //get all directions, and their opposites
+    int tileInDirection[8];
+    readMesh(index, Donut, tileInDirection, chunk);
 
-    int tileAtNextIndex = readT(nextIndex, chunk);
+    int tileInOppositeDirection[8];
+    readMesh(index, DonutInverted, tileInOppositeDirection, chunk);
 
-    if (tileAtNextIndex == AIR) {
-        writeUpdate(BALL, nextIndex, updatedChunk, scheduledUpdates);
-        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+    int oppositeDirectionIndex[8];
+    getMeshIndexes(index, DonutInverted, oppositeDirectionIndex);
+
+
+    int newIndex = index;
+
+    for (int i = 0; i < 8; i++) {
+
+        if (tileInDirection[i] != AIR && tileInOppositeDirection[i] == AIR) {
+            newIndex = oppositeDirectionIndex[i];
+        }
     }
 
-    
-
+    //write ball wherever it ends up.
+    //If it doesn't move, it just rewrites itself to it's same spot!
+    writeUpdate(BALL, newIndex, updatedChunk, scheduledUpdates);
 
 }
 Tile tileBALL = {
@@ -514,8 +535,29 @@ Tile tileBALL = {
 };
 
 
+//no rules just icons
+Tile tileAIR = {
+    .icon = ' ',
+    .name = "air",
+};
+Tile tileSTONE = {
+    .icon = '#',
+    .name = "stone",
+};
+Tile tileWOOD = {
+    .icon = '+',
+    .name = "wood",
+};
+
+
 //Compile array of tiles
 void compileRules() {
+
+    //nonrules
+    TILE_TYPES[AIR] = tileAIR;
+    TILE_TYPES[STONE] = tileSTONE;
+    TILE_TYPES[WOOD] = tileWOOD;
+
     // TILE_TYPES[SMOKE] = tileSMOKE;
     TILE_TYPES[FIRE] = tileFIRE;
     TILE_TYPES[FIRE2] = tileFIRE2;

@@ -1,4 +1,5 @@
 #include "main.h"
+#include "tiles.h"
 
 //text characters used to print tiles from the chunk. Each represents a tile enum.
 char symbols[] = {
@@ -50,6 +51,7 @@ char symbols[] = {
     'O',
     'O',
 };
+extern Tile TILE_TYPES[TILE_TYPE_COUNT];
 
 //prints a representation of the chunk to console (vertical slice)
 void printChunk(int *chunk/*, int *tileUpdates*/) {
@@ -82,7 +84,8 @@ void printChunk2d(int *chunk) {
     for (int i = 0; i < CHUNK_LENGTH; i++) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
         for (int j = 0; j < CHUNK_WIDTH; j++) {
             int tile = chunk[i*CHUNK_WIDTH + j];
-            char icon = symbols[tile];
+            //char icon = symbols[tile];
+            char icon = TILE_TYPES[tile].icon;
 
             printf("%c", icon);
         }

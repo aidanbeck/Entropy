@@ -20,6 +20,7 @@ int moveIndex(int index, int x, int y, int z);
 
 void readAllDirections(int index, int *array);
 void getMeshIndexes(int index, Mesh *mesh, int *array);
+void readMesh(int index, Mesh *mesh, int *array, int *chunk);
 
 int readEast(int index);
 int readWest(int index);

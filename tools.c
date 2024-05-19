@@ -70,6 +70,18 @@ void getMeshIndexes(int index, Mesh *mesh, int *array) {
 
 }
 
+void readMesh(int index, Mesh *mesh, int *array, int *chunk) { //should this use getMeshIndexes?
+
+    int length = mesh[0].length;
+
+    for (int i = 0; i < length; i++) {
+        array[i] = readT(
+            moveIndex(index, mesh[i].x, mesh[i].y, mesh[i].z),
+            chunk
+        );
+    }
+}
+
 int readWest(int index) {
     return moveIndexX(index, -1);
 }
