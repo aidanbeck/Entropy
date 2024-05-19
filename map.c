@@ -1,5 +1,6 @@
 #include "main.h"
 #include "barista.h"
+#include "tools.h"
 
 int getIndex(int x, int y, int z) { //useful example of chunk navigation
 
@@ -12,8 +13,7 @@ int getIndex(int x, int y, int z) { //useful example of chunk navigation
 
 void addTile(int *chunk, int tile, int x, int y, int z) {
     int i = getIndex(x,y,z);
-    chunk[i] = tile;
-    jsWriteIcon(i,tile);
+    writeT(tile, i, chunk);
 }
 
 void addUpdate(int *updates, int x, int y, int z) {

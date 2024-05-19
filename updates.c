@@ -1,6 +1,6 @@
 #include "main.h"
 #include "tiles.h"
-#include "barista.h"
+#include "tools.h"
 
 /*
     Resets every index of an array to a set value.
@@ -69,8 +69,9 @@ int updateChunk(Chunk *CHUNK) {
         //!!! there needs to be some tech here where a tile can update & write to the chunk next to it
 
         if (updatedChunk[i] != -1) { //write changed tiles
-            chunk[i] = updatedChunk[i];
-            jsWriteIcon(i, updatedChunk[i]);
+
+            int tile = updatedChunk[i];
+            writeT(tile, i, chunk);
         }
     }
 

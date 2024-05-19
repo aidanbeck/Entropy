@@ -14,7 +14,7 @@ int readT(int index, int *chunk) {
 //Write
 void writeT(int tile, int index, int *updatedChunk) {
     updatedChunk[index] = tile;
-    jsWriteIcon(index, tile);
+    //jsWriteIcon(index, tile);
 }
 
 //Update
