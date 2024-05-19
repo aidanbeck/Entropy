@@ -79,7 +79,7 @@ void printChunk(int *chunk/*, int *tileUpdates*/) {
 void printChunk2d(int *chunk) {
 
     printf("\n\n---2d Render---\n");
-    for (int i = CHUNK_LENGTH-1; i > -1; i--) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
+    for (int i = 0; i < CHUNK_LENGTH; i++) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
         for (int j = 0; j < CHUNK_WIDTH; j++) {
             int tile = chunk[i*CHUNK_WIDTH + j];
             char icon = symbols[tile];
