@@ -2,10 +2,29 @@
 #include "tools.h"
 #include "tiles.h"
 
-//Tile class
-
 //List of each tile class
 Tile TILE_TYPES[TILE_TYPE_COUNT];
+
+
+Tile tileAIR = {
+    .icon = ' ',
+    .name = "air",
+};
+
+Tile tileSTONE = {
+    .icon = '#',
+    .name = "stone",
+};
+
+Tile tileWOOD = {
+    .icon = '+',
+    .name = "wood",
+};
+
+Tile tileCENTIBODY = {
+    .icon = ':',
+    .name = "centipede body",
+};
 
 //FIRE
 void ruleFIRE(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
@@ -20,6 +39,9 @@ Tile tileFIRE = {
 
 
 Mesh CompassRose[4] = {
+    //  0 
+    // 2&3
+    //  1 
     { .x= 0,    .y= -1,     .z= 0, .length=4 }, //N
     { .x= 0,    .y= 1,      .z= 0 }, //S
     { .x= 1,    .y= 0,      .z= 0 }, //E
@@ -51,6 +73,9 @@ Tile tileFIRE2 = {
 };
 
 Mesh Donut[8] = {
+    // 701
+    // 6&2
+    // 543
     { .x= 0,    .y= -1,     .z= 0, .length=8 }, //N
     { .x= 1,    .y= -1,     .z= 0 }, //NE
     { .x= 1,    .y= 0,      .z= 0 }, //E
@@ -61,6 +86,9 @@ Mesh Donut[8] = {
     { .x= -1,   .y= -1,      .z= 0 } //NW
 };
 Mesh DonutInverted[8] = {
+    // 345
+    // 2&6
+    // 107
     { .x= 0,    .y= 1,     .z= 0, .length=8 }, //N opposite
     { .x= -1,    .y= 1,     .z= 0 }, //NE  opposite
     { .x= -1,    .y= 0,      .z= 0 }, //E  opposite
@@ -83,26 +111,31 @@ int headDirections[8] = {
 };
 void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
 
-    //get direction & target
+    //get head direction
     int head = readT(index, chunk);
+
+    //target index of next space
+    int targetIndex = index;
+
+    //get index the target is facing
+    int nextTarget;
+
+    //initialize body
     int body;
 
-    //get next space
-    int targetIndex = index;
-    int nextTarget;
 
     switch (head) {
 
         case CENTIHEAD_N:
             body = CENTIBODY_N;
-            targetIndex = moveIndexZ(index, -1);
-            nextTarget = moveIndexZ(targetIndex, -1);
+            targetIndex = moveIndexY(index, -1);
+            nextTarget = moveIndexY(targetIndex, -1);
             break;
 
         case CENTIHEAD_S:
             body = CENTIBODY_S;
-            targetIndex = moveIndexZ(index, 1);
-            nextTarget = moveIndexZ(targetIndex, 1);
+            targetIndex = moveIndexY(index, 1);
+            nextTarget = moveIndexY(targetIndex, 1);
             break;
 
         case CENTIHEAD_E:
@@ -119,26 +152,26 @@ void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
         
         case CENTIHEAD_NE:
             body = CENTIBODY_NE;
-            targetIndex = moveIndex(index, 1, 0, -1);
-            nextTarget = moveIndex(targetIndex, 1, 0, -1);
+            targetIndex = moveIndex(index, 1, -1, 0);
+            nextTarget = moveIndex(targetIndex, 1, -1, 0);
             break;
 
         case CENTIHEAD_NW:
             body = CENTIBODY_NW;
-            targetIndex = moveIndex(index, -1, 0, -1);
-            nextTarget = moveIndex(targetIndex, -1, 0, -1);
+            targetIndex = moveIndex(index, -1, -1, 0);
+            nextTarget = moveIndex(targetIndex, -1, -1, 0);
             break;
 
         case CENTIHEAD_SE:
             body = CENTIBODY_SE;
-            targetIndex = moveIndex(index, 1, 0, 1);
-            nextTarget = moveIndex(targetIndex, 1, 0, 1);
+            targetIndex = moveIndex(index, 1, 1, 0);
+            nextTarget = moveIndex(targetIndex, 1, 1, 0);
             break;
         
         case CENTIHEAD_SW:
             body = CENTIBODY_SW;
-            targetIndex = moveIndex(index, -1, 0, 1);
-            nextTarget = moveIndex(targetIndex, -1, 0, 1);
+            targetIndex = moveIndex(index, -1, 1, 0);
+            nextTarget = moveIndex(targetIndex, -1, 1, 0);
             break;
     }
     
@@ -217,11 +250,11 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
     switch (tail) {
 
         case CENTITAIL_N:
-            targetIndex = moveIndexZ(index, 1);
+            targetIndex = moveIndexY(index, -1);
             break;
 
         case CENTITAIL_S:
-            targetIndex = moveIndexZ(index, -1);
+            targetIndex = moveIndexY(index, 1);
             break;
 
         case CENTITAIL_E:
@@ -233,19 +266,19 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
             break;
         
         case CENTITAIL_NE:
-            targetIndex = moveIndex(index, 1, 0, 1);
+            targetIndex = moveIndex(index, 1, -1, 0);
             break;
 
         case CENTITAIL_NW:
-            targetIndex = moveIndex(index, -1, 0, 1);
+            targetIndex = moveIndex(index, -1, -1, 0);
             break;
 
         case CENTITAIL_SE:
-            targetIndex = moveIndex(index, 1, 0, -1);
+            targetIndex = moveIndex(index, 1, 1, 0);
             break;
         
         case CENTITAIL_SW:
-            targetIndex = moveIndex(index, -1, 0, -1);
+            targetIndex = moveIndex(index, -1, 1, 0);
             break;
     }
 
@@ -318,21 +351,6 @@ Tile tileBALL = {
 };
 
 
-//no rules just icons
-Tile tileAIR = {
-    .icon = ' ',
-    .name = "air",
-};
-Tile tileSTONE = {
-    .icon = '#',
-    .name = "stone",
-};
-Tile tileWOOD = {
-    .icon = '+',
-    .name = "wood",
-};
-
-
 //Compile array of tiles
 void compileRules() {
 
@@ -352,6 +370,15 @@ void compileRules() {
     TILE_TYPES[CENTIHEAD_NW] = tileCENTIHEAD;
     TILE_TYPES[CENTIHEAD_SE] = tileCENTIHEAD;
     TILE_TYPES[CENTIHEAD_SW] = tileCENTIHEAD;
+
+    TILE_TYPES[CENTIBODY_N] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_S] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_E] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_W] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_NE] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_NW] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_SE] = tileCENTIBODY;
+    TILE_TYPES[CENTIBODY_SW] = tileCENTIBODY;
 
     TILE_TYPES[CENTITAIL_N] = tileCENTITAIL;
     TILE_TYPES[CENTITAIL_S] = tileCENTITAIL;

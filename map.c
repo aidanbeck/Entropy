@@ -49,9 +49,18 @@ void mapSnek(Chunk *CHUNK) {
     int *chunk = CHUNK->chunk; //normally I should probably call this tiles?
     int *updates = CHUNK->updates;
 
-    addTile(chunk, BALL, 1, 0, 2); addUpdate(updates, 1, 0, 2);
+    addTile(chunk, CENTITAIL_S, 1, 0, 2); addUpdate(updates, 1, 0, 2);
 
-    
+    addTile(chunk, CENTIBODY_S, 1, 0, 3);
+    addTile(chunk, CENTIBODY_S, 1, 0, 4);
+    addTile(chunk, CENTIBODY_S, 1, 0, 5);
+    addTile(chunk, CENTIBODY_S, 1, 0, 6);
+    addTile(chunk, CENTIBODY_S, 1, 0, 7);
+    addTile(chunk, CENTIBODY_S, 1, 0, 8);
+    addTile(chunk, CENTIBODY_S, 1, 0, 9);
+
+    addTile(chunk, CENTIHEAD_S, 1, 0, 10); addUpdate(updates, 1, 0, 10);
+
     //  +
     // +++
     addTile(chunk, WOOD, 0, 0, 0);

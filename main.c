@@ -13,7 +13,7 @@
 #include "tools.h"
 #include "updates.h"
 
-#define MODE 1
+#define MODE 0
 /*
     Files that reference emscripten functions:
     * tools.c -- writeT
