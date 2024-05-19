@@ -10,9 +10,3 @@ void jsWriteIcon(int index, int tile) {
         Module.writeIcon($0, $1);
     }, index, tile);
 }
-
-extern EMSCRIPTEN_KEEPALIVE int multiplier(int x, int y) {
-    int result = x*y;
-    jsWriteIcon(x,y);
-    return result;
-}

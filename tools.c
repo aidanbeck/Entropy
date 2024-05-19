@@ -2,6 +2,7 @@
 
 #include "main.h"
 #include "tools.h"
+#include "barista.h"
 
 
 //Read
@@ -13,6 +14,7 @@ int readT(int index, int *chunk) {
 //Write
 void writeT(int tile, int index, int *updatedChunk) {
     updatedChunk[index] = tile;
+    jsWriteIcon(index, tile);
 }
 
 //Update

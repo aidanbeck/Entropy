@@ -1,4 +1,5 @@
 #include "main.h"
+#include "barista.h"
 
 int getIndex(int x, int y, int z) { //useful example of chunk navigation
 
@@ -38,8 +39,8 @@ void createBorder(Chunk *CHUNK) {
 
     int *tiles = CHUNK->chunk;
 
-    fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH-1, CHUNK_HEIGHT, CHUNK_LENGTH-1);
-    fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-2, CHUNK_HEIGHT, CHUNK_LENGTH-2);
+    fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH-1, 0, CHUNK_LENGTH-1); //changed middle to zero so it doesn't try to access other heights    
+    fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-2, 0, CHUNK_LENGTH-2);
 }
 
 

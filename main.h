@@ -6,12 +6,12 @@
 #include <stdlib.h>
 
 //Ticks
-#define TICK_LIMIT 50000
-#define TICK_DURATION 300000
+#define TICK_LIMIT 60
+#define TICK_DURATION 600000
 
 //Chunk Scaling
 #define CHUNK_LENGTH 15
-#define CHUNK_WIDTH 15*10
+#define CHUNK_WIDTH 75
 #define CHUNK_HEIGHT 1
 #define CHUNK_SIZE (CHUNK_LENGTH * CHUNK_WIDTH * CHUNK_HEIGHT)
 
