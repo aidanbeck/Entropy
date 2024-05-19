@@ -1,72 +1,63 @@
-//may rename this file in the future
-
 #include "main.h"
 #include "tools.h"
 #include "barista.h"
 
-
-//Read
+//Read Tile
 int readT(int index, int *chunk) {
     int tile = chunk[index];
     return tile;
 }
 
-//Write
+//Write Tile
 void writeT(int tile, int index, int *updatedChunk) {
     updatedChunk[index] = tile;
     //jsWriteIcon(index, tile);
 }
 
-//Update
+//Update Tile
 void updateT(int *scheduledUpdates, int index) { //this might not be neccesary. Or, registerUpdate should be moved here.
     registerUpdate(scheduledUpdates, index);
 }
 
-//write & update
+//Write AND Update Tile
 void writeUpdate(int tile, int index, int *updatedChunk, int *scheduledUpdates) {
     writeT(tile, index, updatedChunk);
     updateT(scheduledUpdates, index);
 }
 
-//move Index X
 int moveIndexX(int index, int x) {
     index += x;
     return index;
 }
 
-
-//move Index Z
-int moveIndexZ(int index, int y) {
-    index += (CHUNK_WIDTH*CHUNK_HEIGHT) * y;
+int moveIndexY(int index, int y) {
+    index += y * CHUNK_WIDTH;
     return index;
 }
 
-//move Index Y
-int moveIndexY(int index, int z) {
-    index -= CHUNK_WIDTH * z;
+int moveIndexZ(int index, int z) {
+    index += z * (CHUNK_WIDTH * CHUNK_LENGTH);
     return index;
 }
 
-
-//moveIndex
-int moveIndex(int index, int x, int y, int z) { //can optimize by doing seperate functions per axis
+int moveIndex(int index, int x, int y, int z) { //Should this use functions instead?
 
     index += x;
-    index += CHUNK_WIDTH * z;
-    index += (CHUNK_LENGTH*CHUNK_HEIGHT) * y;
+    index += y * CHUNK_WIDTH;
+    index += z * (CHUNK_WIDTH * CHUNK_LENGTH);
 
     return index;
 }
 
-//readAllDirections - rename to "readCubeFaces"?
+//readAllDirections - rename to "readCubeFaces"? This should be a Mesh in the future.
 void readAllDirections(int index, int *array) {
 
-    array[0] = moveIndex(index, 0, 1, 0); //above
-    array[1] = moveIndex(index, 0, -1, 0); //below
-    array[2] = moveIndex(index, -1, 0, 0); //left
-    array[3] = moveIndex(index, 1, 0, 0); //right
-    array[4] = moveIndex(index, 0, 0, 1); //front
-    array[5] = moveIndex(index, 0, 0, -1); //back
+    array[0] = moveIndexZ(index, 1); //up
+    array[1] = moveIndexZ(index, -1); //down
+    array[2] = moveIndexX(index, -1); //west
+    array[3] = moveIndexX(index, 1); //east
+    array[4] = moveIndexY(index, -1); //north
+    array[5] = moveIndexY(index, 1); //south
 }
 
 void getMeshIndexes(int index, Mesh *mesh, int *array) {
@@ -79,42 +70,33 @@ void getMeshIndexes(int index, Mesh *mesh, int *array) {
 
 }
 
-
-
-
-//readAbove
-int readAbove(int index) {
-    return index - CHUNK_LENGTH;
+int readWest(int index) {
+    return moveIndexX(index, -1);
 }
 
-//readBelow
-int readBelow(int index) {
-    return index + CHUNK_LENGTH;
+int readEast(int index) {
+    return moveIndexX(index, 1);
 }
 
-//readLeft
-int readLeft(int index) {
-    return index - 1;
+int readNorth(int index) {
+    return moveIndexY(index, -1);
 }
 
-//readRight
-int readRight(int index) {
-    return index + 1;
+int readSouth(int index) {
+    return moveIndexY(index, 1);
 }
 
-//readFront
-int readFront(int index) {
-    return index + (CHUNK_LENGTH*CHUNK_HEIGHT);
+int readDown(int index) {
+    return moveIndexZ(index, -1);
 }
 
-//readBack
-int readBack(int index) {
-    return index - (CHUNK_LENGTH*CHUNK_HEIGHT);
+int readUp(int index) {
+    return moveIndexZ(index, 1);
 }
 
-//detectChunkBorder
 int detectChunkBorder(int index) {
     
+    //todo: implement
 
     return 0;
 }
