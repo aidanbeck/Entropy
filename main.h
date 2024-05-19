@@ -32,15 +32,9 @@ void registerUpdate(int *newUpdates, int index);
 enum Tiles {
     AIR,
     STONE,
-    // SAND,
     WOOD,
     FIRE,
     FIRE2,
-    //SMOKE,
-    //MISSILE,
-    //MISSILE2,
-    //WATER,
-    //HUMAN,
 
     CENTIHEAD_N, //centipede parts
     CENTIHEAD_S,

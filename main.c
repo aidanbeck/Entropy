@@ -1,5 +1,10 @@
-//COMPILE WITH: gcc main.c printer.c map.c tiles.c tools.c updates.c -o main.exe -Wall -Wpedantic -Werror
-//RUN WITH: ./main.exe
+/*
+    COMPILE WITH: gcc main.c printer.c map.c tiles.c tools.c updates.c -o main.exe -Wall -Wpedantic -Werror
+
+    OR
+
+    emcc -o ../deadletter/latte.html main.c printer.c map.c tiles.c tools.c updates.c barista.c -O0 --shell-file ../barista/html_template/latte.html -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_gameLoop', '_writeFromJS']"
+*/
 
 #include "main.h"
 #include "printer.h"
@@ -8,7 +13,7 @@
 #include "tools.h"
 #include "updates.h"
 
-#define MODE 0
+#define MODE 1
 /*
     Files that reference emscripten functions:
     * tools.c -- writeT
