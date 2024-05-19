@@ -7,33 +7,41 @@
 #include "tiles.h"
 #include "tools.h"
 #include "updates.h"
-#include "barista.h"
-#include <emscripten/emscripten.h>
+// #include "barista.h"
+// #include <emscripten/emscripten.h>
+
+/*
+    Files that reference emscripten functions:
+    * map.c -- addTile
+    * tools.c -- writeT
+    * updates.c -- updateChunk
+*/
+
 
 Chunk WORLD[WORLD_SIZE];
 int chunkUpdates[WORLD_SIZE]; //like tileupdates but for chunks that have tileupdates
 
 int tick = 0;
 
-extern EMSCRIPTEN_KEEPALIVE int gameLoop() {
+// extern EMSCRIPTEN_KEEPALIVE int gameLoop() {
 
-    updateWorld(WORLD, chunkUpdates);
-    tick++;
-    return tick;
-}
+//     updateWorld(WORLD, chunkUpdates);
+//     tick++;
+//     return tick;
+// }
 
-extern EMSCRIPTEN_KEEPALIVE int writeFromJS(int index, int tile) {
+// extern EMSCRIPTEN_KEEPALIVE int writeFromJS(int index, int tile) {
 
-    Chunk *toWrite = &WORLD[0];
-    int *tiles = toWrite->chunk;
-    int *updates = toWrite->updates;   
+//     Chunk *toWrite = &WORLD[0];
+//     int *tiles = toWrite->chunk;
+//     int *updates = toWrite->updates;   
 
-    //Write to C
-    writeT(tile, index, tiles);
-    updateT(updates, index);
+//     //Write to C
+//     writeT(tile, index, tiles);
+//     updateT(updates, index);
 
-    return updates[index];
-}
+//     return updates[index];
+// }
 
 
 
