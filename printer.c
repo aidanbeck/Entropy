@@ -1,5 +1,6 @@
 #include "main.h"
 #include "tiles.h"
+#include "printer.h"
 
 //text characters used to print tiles from the chunk. Each represents a tile enum.
 char symbols[] = {
@@ -128,7 +129,7 @@ void initializeString(char *array, int length, int lineLength, char value) {
 
 void printChunk3d(int *chunk, int isometric) {
 
-    char frame[PRINT_RES]; initializeString(frame, PRINT_RES, CHUNK_LENGTH*2, ' ');
+    char frame[PRINT_RES_3D]; initializeString(frame, PRINT_RES_3D, CHUNK_LENGTH*2, ' ');
 
     int mapHeight = CHUNK_WIDTH+CHUNK_HEIGHT;
 

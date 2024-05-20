@@ -1,6 +1,14 @@
 #include "main.h"
-#include "tools.h"
-#include "barista.h"
+#include "tools.h" //Only used to get Mesh struct
+#include "updates.h" //Only used for registerUpdate
+#include "barista.h" //Sometimes used for jsWriteIcon
+
+/*
+    ## Naming Questions ##
+    * Should readT and writeT be renamed to readTile and writeTile?
+    * Should writeUpdate be renamed to writeAndUpdate? Or something else?
+    * Should moveIndexX and gang be renamed to moveIndex_X? Or something else?
+*/
 
 //Read Tile
 int readT(int index, int *chunk) {
@@ -15,11 +23,11 @@ void writeT(int tile, int index, int *updatedChunk) {
 }
 
 //Update Tile
-void updateT(int *scheduledUpdates, int index) { //this might not be neccesary. Or, registerUpdate should be moved here.
+void updateT(int *scheduledUpdates, int index) { //This might be unnecessary. Or, registerUpdate should be moved here. Maybe updateT should update a single index, and there should be another function to update all tiles of a mesh.
     registerUpdate(scheduledUpdates, index);
 }
 
-//Write AND Update Tile
+//Write AND Update Tile. Could this be named better?
 void writeUpdate(int tile, int index, int *updatedChunk, int *scheduledUpdates) {
     writeT(tile, index, updatedChunk);
     updateT(scheduledUpdates, index);
@@ -70,7 +78,7 @@ void getMeshIndexes(int index, Mesh *mesh, int *array) {
 
 }
 
-void readMesh(int index, Mesh *mesh, int *array, int *chunk) { //should this use getMeshIndexes?
+void readMesh(int index, Mesh *mesh, int *array, int *chunk) { //Should this use getMeshIndexes?
 
     int length = mesh[0].length;
 

@@ -1,11 +1,10 @@
-//may rename this file in the future
-#include "main.h"
 
+//Should "Mesh" and Mesh-related code be stored in a "Meshes.c" file?
 typedef struct {
     int x;
     int y;
     int z;
-    int length; //needed?
+    int length; //Should length be stored another way?
 } Mesh;
 
 int readT(int index, int *chunk);

@@ -1,33 +1,32 @@
 /*
-    COMPILE WITH: gcc main.c printer.c map.c tiles.c tools.c updates.c -o main.exe -Wall -Wpedantic -Werror
+    ## MODE 0 ##
+    gcc main.c printer.c map.c tiles.c tools.c updates.c -o main.exe -Wall -Wpedantic -Werror
 
-    OR
-
+    ## MODE 1 ##
     emcc -o ../deadletter/latte.html main.c printer.c map.c tiles.c tools.c updates.c barista.c -O0 --shell-file ../barista/html_template/latte.html -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_gameLoop', '_writeFromJS']"
-*/
 
-#include "main.h"
-#include "printer.h"
-#include "map.h"
-#include "tiles.h"
-#include "tools.h"
-#include "updates.h"
-
-#define MODE 0
-/*
-    Files that reference emscripten functions:
+    ## Files that reference emscripten functions ##
     * tools.c -- writeT
 */
 
+#define MODE 0
+
+#include "main.h" //
+#include "printer.h"
+#include "map.h" //
+#include "tiles.h"
+#include "tools.h" //
+#include "updates.h"
 
 Chunk WORLD[WORLD_SIZE];
-int chunkUpdates[WORLD_SIZE]; //like tileupdates but for chunks that have tileupdates
-
+int chunksWithUpdates[WORLD_SIZE];
 int tick = 0;
 
 int main() {
 
-    //set up world
+    compileRules();
+
+    //Initialize All Chunks
     for (int i = 0; i < WORLD_SIZE; i++) {
 
         Chunk newChunk;
@@ -41,23 +40,25 @@ int main() {
 
         WORLD[i] = newChunk;
     }
-    Chunk *startChunk = &WORLD[0]; //create example chunk
-    chunkUpdates[0] = 1; //turn on example chunk
 
-    compileRules();
+    //Create Example Chunk
+    Chunk *startChunk = &WORLD[0];
+    chunksWithUpdates[0] = 1;
+
+    //Map Preset
     createBorder(startChunk);
-    mapSnek(startChunk);
+    loadMap(startChunk);
 
-    //if in console mode (0)
-    if (MODE == 0) {
+    if (MODE == 0) { //Should this be it's own function?
 
-        //render & update chunk i times
+        //Render & Update Example Chunk
         for (int i = 0; i < TICK_LIMIT; i++) {
+
             printf("\n\n---------------------Tick %d---------------------", tick);
             printChunk2d(startChunk->chunk);
             printUpdates2d(startChunk->updates);
 
-            updateWorld(WORLD, chunkUpdates);
+            updateWorld(WORLD, chunksWithUpdates);
             tick++;
             usleep(TICK_DURATION);
         }
