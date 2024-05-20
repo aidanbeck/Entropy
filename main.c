@@ -12,7 +12,7 @@
 #define MODE 0
 
 #include "main.h" //
-#include "printer.h"
+#include "printer.h" //
 #include "map.h" //
 #include "tiles.h"
 #include "tools.h" //
@@ -55,8 +55,8 @@ int main() {
         for (int i = 0; i < TICK_LIMIT; i++) {
 
             printf("\n\n---------------------Tick %d---------------------", tick);
-            printChunk2d(startChunk->chunk);
             printUpdates2d(startChunk->updates);
+            printIcons2d(startChunk->chunk);
 
             updateWorld(WORLD, chunksWithUpdates);
             tick++;

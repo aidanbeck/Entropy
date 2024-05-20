@@ -1,116 +1,18 @@
-#include "main.h"
 #include "tiles.h"
 #include "printer.h"
 
-//text characters used to print tiles from the chunk. Each represents a tile enum.
-char symbols[] = {
-    ' ',
-    '#', //⛰️
-    'X',
-    '+', //🌲
-    '%', //🔥
-    '%',
-    ':', //☁
-    '>', //🚀
-    '<',
-    '~', //🌊
-    '&',
-
-    'N',
-    'S',
-    'E',
-    'W',
-    'n',
-    'u',
-    's',
-    '5',
-
-    '^',
-    'v',
-    '>',
-    '<',
-    '/',
-    '\\',
-    '/',
-    '\\',
-
-    '[',
-    '[',
-    '[',
-    '[',
-    '[',
-    '[',
-    '[',
-    '[',
-
-    'O',
-    'O',
-    'O',
-    'O',
-    'O',
-    'O',
-    'O',
-    'O',
-};
-extern Tile TILE_TYPES[TILE_TYPE_COUNT];
-
-//prints a representation of the chunk to console (vertical slice)
-void printChunk(int *chunk/*, int *tileUpdates*/) {
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    for (int y = 0; y < CHUNK_LENGTH; y++) {
-        
-        int z = 9;
-        for (int x = 0; x < CHUNK_HEIGHT; x++) {
-            printf("%c ",symbols[chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x]]);
-        }
-        
-        printf(" : ");
-        
-        z = 9;
-        for (int x = 0; x < CHUNK_HEIGHT; x++) {
-            printf("%c ",symbols[chunk[y*CHUNK_WIDTH*CHUNK_HEIGHT + z*CHUNK_HEIGHT + x]]);
-        }
-        
-        // for (int x = 0; x < CHUNK_HEIGHT; x++) {
-        //     printf("%d ", tileUpdates[(y*CHUNK_LENGTH)+x]);
-        // }
-
-        printf("\n"); 
-    }
-}
-
-void printChunk2d(int *chunk) {
-
-    printf("\n\n---2d Render---\n");
-    for (int i = 0; i < CHUNK_LENGTH; i++) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
-        for (int j = 0; j < CHUNK_WIDTH; j++) {
-            int tile = chunk[i*CHUNK_WIDTH + j];
-            //char icon = symbols[tile];
-            char icon = TILE_TYPES[tile].icon;
-
-            printf("%c", icon);
-        }
-        printf(" %d\n",i);
-    }
-}
-
-void printUpdates2d(int *tileUpdates) {
-
-    printf("\n\n---2d Updates---\n");
-    for (int i = CHUNK_LENGTH-1; i > -1; i--) { // This starts at CHUNK_LENGTH and deecrements to 0. This way, 0 is the bottom of the display. Both values are subtracted by 1 because if this is not done, the display will be wrong
-        for (int j = 0; j < CHUNK_WIDTH; j++) {
-
-            int update = tileUpdates[i*CHUNK_WIDTH + j];
-            printf("%d", update);
-        }
-        printf(" %d\n",i);
-    }
-}
-
-int getTile(int *chunk, int x, int y,  int z) { //used in 3d printer, doesn't work right with non cubic chunks
+/*
+    Helper function for printIcons3d.
+    Doesn't work for non-cubic chunks(?)
+*/
+int getTile(int *chunk, int x, int y,  int z) {
     return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
 }
 
+/*
+    Helper function for printIcons3d.
+    Eventually should be a helper function for the other functions to decrease stutter.
+*/
 void initializeString(char *array, int length, int lineLength, char value) {
 
     int seatNumber = 0;
@@ -127,7 +29,68 @@ void initializeString(char *array, int length, int lineLength, char value) {
     }
 }
 
-void printChunk3d(int *chunk, int isometric) {
+void printMemory1d(int *chunk) {
+
+    printf("\n\n---1d Memory---\n");
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        printf("%d", chunk[i]);
+    }
+}
+
+void printUpdates1d(int *tileUpdates) {
+    
+    printf("\n\n---1d Updates---\n");
+
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+        printf("%d", tileUpdates[i]);
+    }
+}
+
+void printUpdates2d(int *tileUpdates) {
+
+    printf("\n\n---2d Updates---\n");
+
+    for (int i = 0; i < CHUNK_LENGTH; i++) {
+        for (int j = 0; j < CHUNK_WIDTH; j++) {
+
+            int update = tileUpdates[i*CHUNK_WIDTH + j];
+            printf("%d", update);
+        }
+        printf(" %d\n",i);
+    }
+}
+
+void printIcons1d(int *chunk) {
+
+    printf("\n\n---1d Icons---\n");
+
+    for (int i = 0; i < CHUNK_SIZE; i++) {
+
+        int tile = chunk[i];
+        char icon = TILE_TYPES[tile].icon;
+        printf("%c", icon);
+    }
+}
+
+void printIcons2d(int *chunk) {
+
+    printf("\n\n---2d Icons---\n");
+
+    for (int i = 0; i < CHUNK_LENGTH; i++) {
+        for (int j = 0; j < CHUNK_WIDTH; j++) {
+
+            int tile = chunk[i*CHUNK_WIDTH + j];
+            char icon = TILE_TYPES[tile].icon;
+            printf("%c", icon);
+        }
+        printf(" %d\n",i);
+    }
+}
+
+/*
+    I haven't looked at this in a while, but it is likely a mess and should be refactored.
+*/
+void printIcons3d(int *chunk, int isometric) {
 
     char frame[PRINT_RES_3D]; initializeString(frame, PRINT_RES_3D, CHUNK_LENGTH*2, ' ');
 
@@ -141,43 +104,14 @@ void printChunk3d(int *chunk, int isometric) {
                 if (tile != AIR /*&& tile != STONE*/) {
 
                     if (isometric == 1) {
-                        frame[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = symbols[tile]; //isometric
+                        frame[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = TILE_TYPES[tile].icon; //isometric
                     } else {
-                        frame[z*mapHeight+x] = symbols[tile]; //top down
+                        frame[z*mapHeight+x] = TILE_TYPES[tile].icon; //top down
                     }
-                    
-                    
-
                 }
             }
         }
     }
 
-    //print frame
     printf("%s", frame);
-}
-
-void dumpIcons(int *chunk) {
-    //Dump all map icons (don't organize)
-    printf("\n\n---Icon Dump---\n");
-    for (int i = 0; i < CHUNK_SIZE; i++) {
-        int tile = chunk[i];
-        char icon = symbols[tile];
-        printf("%c", icon);
-    }
-}
-
-void dumpMemory(Chunk *CHUNK) {
-
-    printf("\n\n---Memory Dump---\n");
-    for (int i = 0; i < CHUNK_SIZE; i++) {
-        printf("%d", CHUNK->chunk[i]);
-    }
-
-    printf("\n\n---Updates Dump---\n");
-    for (int i = 0; i < CHUNK_SIZE; i++) {
-        printf("%d", CHUNK->updates[i]);
-    }
-
-
 }

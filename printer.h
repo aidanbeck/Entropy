@@ -1,13 +1,9 @@
+void printMemory1d(int *chunk);
 
-#include <stdio.h>
-#include <unistd.h>
+void printUpdates1d(int *tileUpdates);
+void printUpdates2d(int *tileUpdates);
 
-//String size for printChunk3d
-#define PRINT_RES_3D ((CHUNK_LENGTH+CHUNK_HEIGHT+1) * (CHUNK_WIDTH+CHUNK_HEIGHT))
-
-void printChunk(int *chunk);
-void printChunk2d(int *chunk);
-void printUpdates2d(int *chunk);
-void printChunk3d(int *chunk, int isometric);
-
-void dumpMemory(Chunk *CHUNK);
+void printIcons1d(int *chunk);
+void printIcons2d(int *chunk);
+void printIcons3d(int *chunk, int isometric);
+#define PRINT_RES_3D (CHUNK_LENGTH+CHUNK_HEIGHT+1) * (CHUNK_WIDTH+CHUNK_HEIGHT)
