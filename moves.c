@@ -150,5 +150,3 @@ int moveIndexTowards(int index, int targetIndex, int distance, int *TILES, int *
 
     return steps;
 }
-
-// use "steps" to calculate pushing.
