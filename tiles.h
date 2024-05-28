@@ -51,7 +51,7 @@ enum Tiles {
 typedef struct {
     char icon;
     char name[16];
-    void (*rule)(int *chunk, int *updatedChunk, int *scheduledUpdates, int index);
+    void (*rule)(int *TILES, int *nextTiles, int *nextUpdates, int index);
 } Tile;
 
 typedef struct {

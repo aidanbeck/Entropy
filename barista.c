@@ -24,12 +24,12 @@ extern EMSCRIPTEN_KEEPALIVE int gameLoop() {
 extern EMSCRIPTEN_KEEPALIVE int writeFromJS(int index, int tile) {
 
     Chunk *toWrite = &WORLD[0];
-    int *tiles = toWrite->chunk;
-    int *updates = toWrite->updates;   
+    int *tiles = toWrite->TILES;
+    int *UPDATES = toWrite->UPDATES;   
 
     //Write to C
     writeT(tile, index, tiles);
-    updateT(updates, index);
+    updateT(UPDATES, index);
 
-    return updates[index];
+    return UPDATES[index];
 }

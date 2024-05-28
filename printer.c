@@ -5,8 +5,8 @@
     Helper function for printIcons3d.
     Doesn't work for non-cubic chunks(?)
 */
-int getTile(int *chunk, int x, int y,  int z) {
-    return chunk[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
+int getTile(int *TILES, int x, int y,  int z) {
+    return TILES[z*CHUNK_WIDTH*CHUNK_HEIGHT + y*CHUNK_HEIGHT + x];
 }
 
 /*
@@ -29,57 +29,61 @@ void initializeString(char *array, int length, int lineLength, char value) {
     }
 }
 
-void printMemory1d(int *chunk) {
+void printMemory1d(int *TILES) {
 
     printf("\n\n---1d Memory---\n");
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        printf("%d", chunk[i]);
+        printf("%d", TILES[i]);
     }
 }
 
-void printUpdates1d(int *tileUpdates) {
+void printUpdates1d(int *UPDATES) {
     
     printf("\n\n---1d Updates---\n");
 
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        printf("%d", tileUpdates[i]);
+        printf("%d", UPDATES[i]);
     }
 }
 
-void printUpdates2d(int *tileUpdates) {
+void printUpdates2d(int *UPDATES) {
 
     printf("\n\n---2d Updates---\n");
 
     for (int i = 0; i < CHUNK_LENGTH; i++) {
         for (int j = 0; j < CHUNK_WIDTH; j++) {
 
-            int update = tileUpdates[i*CHUNK_WIDTH + j];
+            int update = UPDATES[i*CHUNK_WIDTH + j];
             printf("%d", update);
         }
         printf(" %d\n",i);
     }
 }
 
-void printIcons1d(int *chunk) {
+void printIcons1d(int *TILES) {
 
     printf("\n\n---1d Icons---\n");
 
     for (int i = 0; i < CHUNK_SIZE; i++) {
 
-        int tile = chunk[i];
+        int tile = TILES[i];
         char icon = TILE_TYPES[tile].icon;
         printf("%c", icon);
     }
 }
 
-void printIcons2d(int *chunk) {
+void printIcons2d(int *tiles) {
+
+    
 
     printf("\n\n---2d Icons---\n");
 
     for (int i = 0; i < CHUNK_LENGTH; i++) {
         for (int j = 0; j < CHUNK_WIDTH; j++) {
 
-            int tile = chunk[i*CHUNK_WIDTH + j];
+            
+
+            int tile = tiles[i*CHUNK_WIDTH + j];
             char icon = TILE_TYPES[tile].icon;
             printf("%c", icon);
         }
@@ -90,7 +94,7 @@ void printIcons2d(int *chunk) {
 /*
     I haven't looked at this in a while, but it is likely a mess and should be refactored.
 */
-void printIcons3d(int *chunk, int isometric) {
+void printIcons3d(int *TILES, int isometric) {
 
     char frame[PRINT_RES_3D]; initializeString(frame, PRINT_RES_3D, CHUNK_LENGTH*2, ' ');
 
@@ -100,7 +104,7 @@ void printIcons3d(int *chunk, int isometric) {
         for (int z = 0; z < CHUNK_WIDTH; z++) {
             for (int x = 0; x < CHUNK_LENGTH; x++) {    //can add x or y offset to CHUNK_LENGTH and CHUNK_WIDTH
 
-                int tile = getTile(chunk, x, y, z);
+                int tile = getTile(TILES, x, y, z);
                 if (tile != AIR /*&& tile != STONE*/) {
 
                     if (isometric == 1) {

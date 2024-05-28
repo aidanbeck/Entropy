@@ -28,9 +28,9 @@ Tile tileCENTIBODY = {
 };
 
 //FIRE
-void ruleFIRE(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleFIRE(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
-    writeUpdate(FIRE2, index, updatedChunk, scheduledUpdates);
+    writeUpdate(FIRE2, index, nextTiles, nextUpdates);
 }
 Tile tileFIRE = {
     .icon = '%',
@@ -49,12 +49,12 @@ Mesh CompassRose[4] = {
     { .x= -1,   .y= 0,      .z= 0 }, //W
 };
 //FIRE2
-void ruleFIRE2(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleFIRE2(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
-    writeUpdate(AIR, index, updatedChunk, scheduledUpdates); //removed smoke for now
+    writeUpdate(AIR, index, nextTiles, nextUpdates); //removed smoke for now
 
     int tileInDirection[4];
-    readMesh(index, CompassRose, tileInDirection, chunk);
+    readMesh(index, CompassRose, tileInDirection, TILES);
 
     int directionIndex[4];
     getMeshIndexes(index, CompassRose, directionIndex);
@@ -63,7 +63,7 @@ void ruleFIRE2(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) 
     for (int i = 0; i < 4; i++) {
 
         if (tileInDirection[i] == WOOD) {
-            writeUpdate(FIRE, directionIndex[i], updatedChunk, scheduledUpdates);
+            writeUpdate(FIRE, directionIndex[i], nextTiles, nextUpdates);
         }
     }
 }
@@ -110,10 +110,10 @@ int headDirections[8] = {
     CENTIHEAD_W,
     CENTIHEAD_NW
 };
-void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleCENTIHEAD(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     //get head direction
-    int head = readT(index, chunk);
+    int head = readT(index, TILES);
 
     //target index of next space
     int targetIndex = index;
@@ -177,12 +177,12 @@ void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
     }
     
     //set new head
-    if (readT(targetIndex, chunk) == AIR) { //if next space is AIR
+    if (readT(targetIndex, TILES) == AIR) { //if next space is AIR
 
         //move head & body forwards
-        writeUpdate(body, index, updatedChunk, scheduledUpdates);
+        writeUpdate(body, index, nextTiles, nextUpdates);
 
-        if (readT(nextTarget, chunk) != AIR) { //if space after next is air
+        if (readT(nextTarget, TILES) != AIR) { //if space after next is air
             //detect where the head should turn
             //create mesh of free spaces
             int directions[8];
@@ -191,16 +191,16 @@ void ruleCENTIHEAD(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
 
             //for each space in the mesh
             for (int i = 0; i < 8; i++) {
-                if (readT(directions[i],chunk) == AIR) {
+                if (readT(directions[i],TILES) == AIR) {
 
                     //turn head
                     newHead = headDirections[i];
 
                 }
             }
-            writeUpdate(newHead, targetIndex, updatedChunk, scheduledUpdates);
+            writeUpdate(newHead, targetIndex, nextTiles, nextUpdates);
         } else {
-            writeUpdate(head, targetIndex, updatedChunk, scheduledUpdates);
+            writeUpdate(head, targetIndex, nextTiles, nextUpdates);
         }
 
         
@@ -240,10 +240,10 @@ int bodyDirections[8] = {
     CENTIBODY_W,
     CENTIBODY_NW
 };
-void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleCENTITAIL(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     //get direction & target
-    int tail = readT(index, chunk);
+    int tail = readT(index, TILES);
 
     //get next space
     int targetIndex = index;
@@ -285,7 +285,7 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
 
     //set new tail
     int newTail;
-    int pointingTo = readT(targetIndex, chunk);
+    int pointingTo = readT(targetIndex, TILES);
     if (pointingTo >= CENTIBODY_N && pointingTo <= CENTIBODY_SW) { //if pointing to CENTIBODY
 
         for (int i = 0; i < 8; i++) {
@@ -296,12 +296,12 @@ void ruleCENTITAIL(int *chunk, int *updatedChunk, int *scheduledUpdates, int ind
             }
 
         }
-        writeUpdate(newTail, targetIndex, updatedChunk, scheduledUpdates);
+        writeUpdate(newTail, targetIndex, nextTiles, nextUpdates);
         
         //turn OG tail into air
-        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+        writeUpdate(AIR, index, nextTiles, nextUpdates);
     } else {
-        updateT(scheduledUpdates, index); //should die?
+        updateT(nextUpdates, index); //should die?
     }
 
     
@@ -315,18 +315,18 @@ Tile tileCENTITAIL = {
 
 
 //BALL
-void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleBALL(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     // Set self to air
 
     // Get all directions, and their opposites
     int tileInDirection[8];
-    //readMesh(index, Donut, tileInDirection, chunk);
-    meshIsEmpty(index, Donut, tileInDirection, chunk, updatedChunk);
+    //readMesh(index, Donut, tileInDirection, TILES);
+    meshIsEmpty(index, Donut, tileInDirection, TILES, nextTiles);
 
     int tileInOppositeDirection[8];
-    //readMesh(index, DonutInverted, tileInOppositeDirection, chunk);
-    meshIsEmpty(index, DonutInverted, tileInOppositeDirection, chunk, updatedChunk);
+    //readMesh(index, DonutInverted, tileInOppositeDirection, TILES);
+    meshIsEmpty(index, DonutInverted, tileInOppositeDirection, TILES, nextTiles);
 
     int oppositeDirectionIndex[8];
     getMeshIndexes(index, DonutInverted, oppositeDirectionIndex);
@@ -348,8 +348,8 @@ void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
     //write ball wherever it ends up.
     //If it doesn't move, it just rewrites itself to it's same spot!
     if (newIndex != index) {
-        writeUpdate(BALL, newIndex, updatedChunk, scheduledUpdates);
-        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+        writeUpdate(BALL, newIndex, nextTiles, nextUpdates);
+        writeUpdate(AIR, index, nextTiles, nextUpdates);
     }
     
 
@@ -361,19 +361,19 @@ Tile tileBALL = {
 };
 
 int RAT_TARGET = 823 + 12; //Magic Number. The index all rats will chase.
-void ruleRAT(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void ruleRAT(int *TILES, int *nextTiles, int *nextUpdates, int index) {
     
     int newIndex = moveOnceTowards(index, RAT_TARGET);
 
-    if ( indexIsEmpty(newIndex, chunk, updatedChunk) == 1 ) {
+    if ( indexIsEmpty(newIndex, TILES, nextTiles) == 1 ) {
 
-        writeUpdate(RAT, newIndex, updatedChunk, scheduledUpdates);
-        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+        writeUpdate(RAT, newIndex, nextTiles, nextUpdates);
+        writeUpdate(AIR, index, nextTiles, nextUpdates);
     }
 
     else {
         RAT_TARGET = getRandomIndex();
-        updateT(scheduledUpdates, index);
+        updateT(nextUpdates, index);
     }
     
 }

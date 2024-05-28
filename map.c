@@ -20,21 +20,21 @@ int getIndex(int x, int y, int z) {
     return x + y + z;
 }
 
-void addTile(int *chunk, int tile, int x, int y, int z) {
+void addTile(int *TILES, int tile, int x, int y, int z) {
     int i = getIndex(x,y,z);
-    writeT(tile, i, chunk);
+    writeT(tile, i, TILES);
 }
 
-void addUpdate(int *updates, int x, int y, int z) {
+void addUpdate(int *UPDATES, int x, int y, int z) {
     int i = getIndex(x,y,z);
-    updates[i] = 1;
+    UPDATES[i] = 1;
 }
 
-void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
+void fillTile(int *TILES, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
     for (int i = x1; i <= x2; i++) {
         for (int j = y1; j <= y2; j++) {
             for (int a = z1; a <= z2; a++) {
-                addTile(chunk, tile, i, j, a);
+                addTile(TILES, tile, i, j, a);
             }
         }
     }
@@ -43,7 +43,7 @@ void fillTile(int *chunk, int tile, int x1, int y1, int z1, int x2, int y2, int 
 //Creates a border of STONE that is filled with AIR.
 void createBorder(Chunk *CHUNK) {
 
-    int *tiles = CHUNK->chunk;
+    int *tiles = CHUNK->TILES;
 
     fillTile(tiles, STONE, 0, 0, 0, CHUNK_WIDTH-1, 0, CHUNK_LENGTH-1); //changed middle to zero so it doesn't try to access other heights    
     fillTile(tiles, AIR, 1, 0, 1, CHUNK_WIDTH-2, 0, CHUNK_LENGTH-2);
@@ -52,33 +52,33 @@ void createBorder(Chunk *CHUNK) {
 
 void loadMap(Chunk *CHUNK) {
 
-    int *chunk = CHUNK->chunk; //Should I call this "tiles" or "chunk"? I should create another standard.
-    int *updates = CHUNK->updates;
+    int *TILES = CHUNK->TILES;
+    int *UPDATES = CHUNK->UPDATES;
 
     //RAT
-    addTile(chunk, RAT, 3, 0, 7);
-    addUpdate(updates, 3, 0, 7);
+    addTile(TILES, RAT, 3, 0, 7);
+    addUpdate(UPDATES, 3, 0, 7);
 
-    addTile(chunk, RAT, 20, 0, 10);
-    addUpdate(updates, 20, 0, 10);
+    addTile(TILES, RAT, 20, 0, 10);
+    addUpdate(UPDATES, 20, 0, 10);
 
-    addTile(chunk, RAT, 50, 0, 5);
-    addUpdate(updates, 50, 0, 5);
+    addTile(TILES, RAT, 50, 0, 5);
+    addUpdate(UPDATES, 50, 0, 5);
 
     //BALL
-    addTile(chunk, BALL, 12, 0, 8);
-    addUpdate(updates, 12, 0, 8);
+    addTile(TILES, BALL, 12, 0, 8);
+    addUpdate(UPDATES, 12, 0, 8);
 
 
     //Centipede
-    addTile(chunk, CENTITAIL_S, 1, 0, 2); addUpdate(updates, 1, 0, 2);
-    addTile(chunk, CENTIBODY_S, 1, 0, 3);
-    addTile(chunk, CENTIBODY_S, 1, 0, 4);
-    addTile(chunk, CENTIBODY_S, 1, 0, 5);
-    addTile(chunk, CENTIBODY_S, 1, 0, 6);
-    addTile(chunk, CENTIBODY_S, 1, 0, 7);
-    addTile(chunk, CENTIBODY_S, 1, 0, 8);
-    addTile(chunk, CENTIBODY_S, 1, 0, 9);
-    addTile(chunk, CENTIHEAD_S, 1, 0, 10); addUpdate(updates, 1, 0, 10);
+    addTile(TILES, CENTITAIL_S, 1, 0, 2); addUpdate(UPDATES, 1, 0, 2);
+    addTile(TILES, CENTIBODY_S, 1, 0, 3);
+    addTile(TILES, CENTIBODY_S, 1, 0, 4);
+    addTile(TILES, CENTIBODY_S, 1, 0, 5);
+    addTile(TILES, CENTIBODY_S, 1, 0, 6);
+    addTile(TILES, CENTIBODY_S, 1, 0, 7);
+    addTile(TILES, CENTIBODY_S, 1, 0, 8);
+    addTile(TILES, CENTIBODY_S, 1, 0, 9);
+    addTile(TILES, CENTIHEAD_S, 1, 0, 10); addUpdate(UPDATES, 1, 0, 10);
 
 }

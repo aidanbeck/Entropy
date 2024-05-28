@@ -11,26 +11,26 @@
 */
 
 //Read Tile
-int readT(int index, int *chunk) {
-    int tile = chunk[index];
+int readT(int index, int *TILES) {
+    int tile = TILES[index];
     return tile;
 }
 
 //Write Tile
-void writeT(int tile, int index, int *updatedChunk) {
-    updatedChunk[index] = tile;
+void writeT(int tile, int index, int *nextTiles) {
+    nextTiles[index] = tile;
     //jsWriteIcon(index, tile);
 }
 
 //Update Tile
-void updateT(int *scheduledUpdates, int index) { //This might be unnecessary. Or, registerUpdate should be moved here. Maybe updateT should update a single index, and there should be another function to update all tiles of a mesh.
-    registerUpdate(scheduledUpdates, index);
+void updateT(int *nextUpdates, int index) { //This might be unnecessary. Or, registerUpdate should be moved here. Maybe updateT should update a single index, and there should be another function to update all tiles of a mesh.
+    registerUpdate(nextUpdates, index);
 }
 
 //Write AND Update Tile. Could this be named better?
-void writeUpdate(int tile, int index, int *updatedChunk, int *scheduledUpdates) {
-    writeT(tile, index, updatedChunk);
-    updateT(scheduledUpdates, index);
+void writeUpdate(int tile, int index, int *nextTiles, int *nextUpdates) {
+    writeT(tile, index, nextTiles);
+    updateT(nextUpdates, index);
 }
 
 int moveIndexX(int index, int x) {
@@ -78,41 +78,16 @@ void getMeshIndexes(int index, Mesh *mesh, int *array) {
 
 }
 
-void readMesh(int index, Mesh *mesh, int *array, int *chunk) { //Should this use getMeshIndexes?
+void readMesh(int index, Mesh *mesh, int *array, int *TILES) { //Should this use getMeshIndexes?
 
     int length = mesh[0].length;
 
     for (int i = 0; i < length; i++) {
         array[i] = readT(
             moveIndex(index, mesh[i].x, mesh[i].y, mesh[i].z),
-            chunk
+            TILES
         );
     }
-}
-
-// Naming seems a bit incorrect... "read" currently refers to getting the value of an index AND the index itself.
-int readWest(int index) {
-    return moveIndexX(index, -1);
-}
-
-int readEast(int index) {
-    return moveIndexX(index, 1);
-}
-
-int readNorth(int index) {
-    return moveIndexY(index, -1);
-}
-
-int readSouth(int index) {
-    return moveIndexY(index, 1);
-}
-
-int readDown(int index) {
-    return moveIndexZ(index, -1);
-}
-
-int readUp(int index) {
-    return moveIndexZ(index, 1);
 }
 
 /*
@@ -120,10 +95,10 @@ int readUp(int index) {
     1 indicates that a index is EMPTY on the next tick.
     0 indicates that the index is FULL on the next tick.
 */
-int indexIsEmpty(int index, int *chunk, int *updatedChunk) {
+int indexIsEmpty(int index, int *TILES, int *nextTiles) {
 
-    int tile    = readT(index, chunk);
-    int newTile = readT(index, updatedChunk);
+    int tile    = readT(index, TILES);
+    int newTile = readT(index, nextTiles);
 
     if (newTile == 0) { return 1; } //The next tick is writing AIR there, so it will definitely be free.
 
@@ -137,13 +112,13 @@ int indexIsEmpty(int index, int *chunk, int *updatedChunk) {
     Returns 1 for each index in a mesh that is empty.
     Returns 0 for each index in a mesh that is full.
 */
-void meshIsEmpty(int index, Mesh *mesh, int *array, int *chunk, int *updatedChunk) {
+void meshIsEmpty(int index, Mesh *mesh, int *array, int *TILES, int *nextTiles) {
 
     int length = mesh[0].length;
 
     for (int i = 0; i < length; i++) {
 
         int newIndex = moveIndex(index, mesh[i].x, mesh[i].y, mesh[i].z);
-        array[i] = indexIsEmpty(newIndex, chunk, updatedChunk);
+        array[i] = indexIsEmpty(newIndex, TILES, nextTiles);
     }
 }

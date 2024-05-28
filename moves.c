@@ -34,8 +34,6 @@ int indexToZ(int index) {
 }
 
 int moveOnceTowards(int index, int targetIndex) {
-
-   printf("\nb:%d", index);
     
     int x = indexToX(index);
     int y = indexToY(index);
@@ -56,8 +54,24 @@ int moveOnceTowards(int index, int targetIndex) {
     if      (z < targetZ) { index = moveIndexZ(index,  1); }
     else if (z > targetZ) { index = moveIndexZ(index, -1); }
 
-printf("\na:%d", index);
-
-
     return index;
 }
+
+
+// This takes into account if the index is available
+// int moveTowards(int index, int targetIndex, int distance) {
+
+//     int x = indexToX(index);
+//     int y = indexToY(index);
+//     int z = indexToZ(index);
+
+//     int targetX = indexToX(targetIndex);
+//     int targetY = indexToY(targetIndex);
+//     int targetZ = indexToZ(targetIndex);
+
+//     for (int i = 0; i < distance; i++) {
+
+//     }
+    
+//     return index;
+// }

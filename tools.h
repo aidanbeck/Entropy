@@ -7,10 +7,10 @@ typedef struct {
     int length; //Should length be stored another way?
 } Mesh;
 
-int readT(int index, int *chunk);
-void writeT(int tile, int index, int *updatedChunk);
-void updateT(int *scheduledUpdates, int index);
-void writeUpdate(int tile, int index, int *updatedChunk, int *scheduledUpdates);
+int readT(int index, int *TILES);
+void writeT(int tile, int index, int *nextTiles);
+void updateT(int *nextUpdates, int index);
+void writeUpdate(int tile, int index, int *nextTiles, int *nextUpdates);
 
 int moveIndexX(int index, int x);
 int moveIndexY(int index, int y);
@@ -19,14 +19,7 @@ int moveIndex(int index, int x, int y, int z);
 
 void readAllDirections(int index, int *array);
 void getMeshIndexes(int index, Mesh *mesh, int *array);
-void readMesh(int index, Mesh *mesh, int *array, int *chunk);
+void readMesh(int index, Mesh *mesh, int *array, int *TILES);
 
-int readEast(int index);
-int readWest(int index);
-int readNorth(int index);
-int readSouth(int index);
-int readDown(int index);
-int readUp(int index);
-
-int indexIsEmpty(int index, int *chunk, int *updatedChunk);
-void meshIsEmpty(int index, Mesh *mesh, int *array, int *chunk, int *updatedChunk);
+int indexIsEmpty(int index, int *TILES, int *nextTiles);
+void meshIsEmpty(int index, Mesh *mesh, int *array, int *TILES, int *nextTiles);

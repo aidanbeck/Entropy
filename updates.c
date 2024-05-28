@@ -13,7 +13,7 @@ void initializeArray(int *array, int length, int value) {
 }
 
 /*
-    Adds the index in each direction to the "scheduledUpdates" array.
+    Adds the index in each direction to the "nextUpdates" array.
     This should probably use a mesh instead, because it breaks if it hits a border.
 
     This does not utilize the new directional standards.
@@ -33,29 +33,29 @@ void registerUpdate(int *newUpdates, int index) {
 /*
     Runs the rule function of a tile if it has one.
 */
-void updateTile(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+void updateTile(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
-    int tile = chunk[index];
+    int tile = TILES[index];
     Tile data = TILE_TYPES[tile];
     
     if (data.rule != NULL) { //may want to check if data in general is defined as well
-        data.rule(chunk, updatedChunk, scheduledUpdates, index);
+        data.rule(TILES, nextTiles, nextUpdates, index);
     }
 
 }
 
 int updateChunk(Chunk *CHUNK) {
 
-    int *chunk = CHUNK->chunk;
-    int *tileUpdates = CHUNK->updates; //names might not be standardized
+    int *TILES = CHUNK->TILES;
+    int *UPDATES = CHUNK->UPDATES;
 
-    int scheduledUpdates[CHUNK_SIZE]; initializeArray(scheduledUpdates, CHUNK_SIZE, 0);//a list of what tiles to update on the next tick. 0 indicates don't update this tile, 1 indicates do update
-    int updatedChunk[CHUNK_SIZE]; initializeArray(updatedChunk, CHUNK_SIZE, -1); //a list of tiles that need to be changed. -1 indicates no change.
+    int nextUpdates[CHUNK_SIZE]; initializeArray(nextUpdates, CHUNK_SIZE, 0);//a list of what tiles to update on the next tick. 0 indicates don't update this tile, 1 indicates do update
+    int nextTiles[CHUNK_SIZE]; initializeArray(nextTiles, CHUNK_SIZE, -1); //a list of tiles that need to be changed. -1 indicates no change.
 
     //update all tiles that have updates scheduled
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        if (tileUpdates[i] == 1) {
-            updateTile(chunk, updatedChunk, scheduledUpdates, i);
+        if (UPDATES[i] == 1) {
+            updateTile(TILES, nextTiles, nextUpdates, i);
         }
     }
 
@@ -64,18 +64,18 @@ int updateChunk(Chunk *CHUNK) {
     int shouldUpdateChunk = 0;
 
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        tileUpdates[i] = scheduledUpdates[i];
+        UPDATES[i] = nextUpdates[i];
 
-        if (tileUpdates[i] == 1 && shouldUpdateChunk == 0) { //if the chunk will have more tile updates
+        if (UPDATES[i] == 1 && shouldUpdateChunk == 0) { //if the chunk will have more tile updates
             shouldUpdateChunk = 1; //set the chunk to update
         }
 
         //!!! there needs to be some tech here where a tile can update & write to the chunk next to it
 
-        if (updatedChunk[i] != -1) { //write changed tiles
+        if (nextTiles[i] != -1) { //write changed tiles
 
-            int tile = updatedChunk[i];
-            writeT(tile, i, chunk);
+            int tile = nextTiles[i];
+            writeT(tile, i, TILES);
         }
     }
 
@@ -84,21 +84,21 @@ int updateChunk(Chunk *CHUNK) {
 
 void updateWorld(Chunk *WORLD, int *chunksWithUpdates) {
 
-    int scheduledUpdates[WORLD_SIZE]; initializeArray(scheduledUpdates, WORLD_SIZE, 0); //list chunks that get updates. 0 means don't update, 1 means do.
+    int nextUpdates[WORLD_SIZE]; initializeArray(nextUpdates, WORLD_SIZE, 0); //list chunks that get updates. 0 means don't update, 1 means do.
 
     //update all chunks that have updates scheduled
     for (int i = 0; i < WORLD_SIZE; i++) {
         if (chunksWithUpdates[i] == 1) {
 
             Chunk *toUpdate = &WORLD[i];
-            scheduledUpdates[i] = updateChunk(toUpdate);
+            nextUpdates[i] = updateChunk(toUpdate);
             
         }
     }
 
     //add new scheduled updates to updates list for the next tick
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        chunksWithUpdates[i] = scheduledUpdates[i];
+        chunksWithUpdates[i] = nextUpdates[i];
     }
 
 }

@@ -40,9 +40,9 @@ int main() {
         for (int i = 0; i < TICK_LIMIT; i++) {
 
             printf("\n\n---------------------Tick %d---------------------", tick);
-            printUpdates2d(startChunk->updates);
-            printIcons2d(startChunk->chunk);
-
+            printUpdates2d(startChunk->UPDATES);
+            printIcons2d(startChunk->TILES);
+            
             updateWorld(WORLD, chunksWithUpdates);
             tick++;
             usleep(TICK_DURATION);

@@ -1,9 +1,9 @@
-void printMemory1d(int *chunk);
+void printMemory1d(int *TILES);
 
-void printUpdates1d(int *tileUpdates);
-void printUpdates2d(int *tileUpdates);
+void printUpdates1d(int *UPDATES);
+void printUpdates2d(int *UPDATES);
 
-void printIcons1d(int *chunk);
-void printIcons2d(int *chunk);
-void printIcons3d(int *chunk, int isometric);
+void printIcons1d(int *TILES);
+void printIcons2d(int *TILES);
+void printIcons3d(int *TILES, int isometric);
 #define PRINT_RES_3D (CHUNK_LENGTH+CHUNK_HEIGHT+1) * (CHUNK_WIDTH+CHUNK_HEIGHT)
