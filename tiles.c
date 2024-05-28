@@ -317,15 +317,16 @@ Tile tileCENTITAIL = {
 //BALL
 void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
 
-    //set self to air
-    writeUpdate(AIR, index, updatedChunk, scheduledUpdates); //comment this out for a cool effect!
+    // Set self to air
 
-    //get all directions, and their opposites
+    // Get all directions, and their opposites
     int tileInDirection[8];
-    readMesh(index, Donut, tileInDirection, chunk);
+    //readMesh(index, Donut, tileInDirection, chunk);
+    meshIsEmpty(index, Donut, tileInDirection, chunk, updatedChunk);
 
     int tileInOppositeDirection[8];
-    readMesh(index, DonutInverted, tileInOppositeDirection, chunk);
+    //readMesh(index, DonutInverted, tileInOppositeDirection, chunk);
+    meshIsEmpty(index, DonutInverted, tileInOppositeDirection, chunk, updatedChunk);
 
     int oppositeDirectionIndex[8];
     getMeshIndexes(index, DonutInverted, oppositeDirectionIndex);
@@ -335,14 +336,22 @@ void ruleBALL(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
 
     for (int i = 0; i < 8; i++) {
 
-        if (tileInDirection[i] != AIR && tileInOppositeDirection[i] == AIR) {
+        int surroundedByAir = tileInDirection[i];
+        int oppositeIsEmpty = tileInOppositeDirection[i];
+
+        if (surroundedByAir != 1 && oppositeIsEmpty) { // If not surrounded by AIR, AND the opposite direction of nearby tile is empty
             newIndex = oppositeDirectionIndex[i];
+            
         }
     }
 
     //write ball wherever it ends up.
     //If it doesn't move, it just rewrites itself to it's same spot!
-    writeUpdate(BALL, newIndex, updatedChunk, scheduledUpdates);
+    if (newIndex != index) {
+        writeUpdate(BALL, newIndex, updatedChunk, scheduledUpdates);
+        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+    }
+    
 
 }
 Tile tileBALL = {
@@ -356,7 +365,8 @@ void ruleRAT(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
     
     int newIndex = moveOnceTowards(index, RAT_TARGET);
 
-    if (index != newIndex && readT(newIndex, chunk) == AIR) {
+    if ( indexIsEmpty(newIndex, chunk, updatedChunk) == 1 ) {
+
         writeUpdate(RAT, newIndex, updatedChunk, scheduledUpdates);
         writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
     }

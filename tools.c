@@ -90,6 +90,7 @@ void readMesh(int index, Mesh *mesh, int *array, int *chunk) { //Should this use
     }
 }
 
+// Naming seems a bit incorrect... "read" currently refers to getting the value of an index AND the index itself.
 int readWest(int index) {
     return moveIndexX(index, -1);
 }
@@ -114,9 +115,35 @@ int readUp(int index) {
     return moveIndexZ(index, 1);
 }
 
-int detectChunkBorder(int index) {
-    
-    //todo: implement
+/*
+    Useful for detecting if an index is safe to write to, and that it won't "eat" another tile trying to write to that space.
+    1 indicates that a index is EMPTY on the next tick.
+    0 indicates that the index is FULL on the next tick.
+*/
+int indexIsEmpty(int index, int *chunk, int *updatedChunk) {
+
+    int tile    = readT(index, chunk);
+    int newTile = readT(index, updatedChunk);
+
+    if (newTile == 0) { return 1; } //The next tick is writing AIR there, so it will definitely be free.
+
+    if (tile == 0 && newTile == -1) { return 1; } // Count non-updates as empty.
 
     return 0;
+}
+
+
+/*
+    Returns 1 for each index in a mesh that is empty.
+    Returns 0 for each index in a mesh that is full.
+*/
+void meshIsEmpty(int index, Mesh *mesh, int *array, int *chunk, int *updatedChunk) {
+
+    int length = mesh[0].length;
+
+    for (int i = 0; i < length; i++) {
+
+        int newIndex = moveIndex(index, mesh[i].x, mesh[i].y, mesh[i].z);
+        array[i] = indexIsEmpty(newIndex, chunk, updatedChunk);
+    }
 }

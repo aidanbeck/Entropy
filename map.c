@@ -65,6 +65,11 @@ void loadMap(Chunk *CHUNK) {
     addTile(chunk, RAT, 50, 0, 5);
     addUpdate(updates, 50, 0, 5);
 
+    //BALL
+    addTile(chunk, BALL, 12, 0, 8);
+    addUpdate(updates, 12, 0, 8);
+
+
     //Centipede
     addTile(chunk, CENTITAIL_S, 1, 0, 2); addUpdate(updates, 1, 0, 2);
     addTile(chunk, CENTIBODY_S, 1, 0, 3);

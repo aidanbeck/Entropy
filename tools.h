@@ -27,3 +27,6 @@ int readNorth(int index);
 int readSouth(int index);
 int readDown(int index);
 int readUp(int index);
+
+int indexIsEmpty(int index, int *chunk, int *updatedChunk);
+void meshIsEmpty(int index, Mesh *mesh, int *array, int *chunk, int *updatedChunk);
