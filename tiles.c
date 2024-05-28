@@ -360,14 +360,16 @@ Tile tileBALL = {
     .rule = ruleBALL
 };
 
-int RAT_TARGET = 823 + 12; //Magic Number. The index all rats will chase.
+int RAT_TARGET = 0;//823 + 12; //Magic Number. The index all rats will chase.
 void ruleRAT(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
-    int steps = moveIndexTowards(index, RAT_TARGET, 25, TILES, nextTiles, nextUpdates);
-    if (steps < 5) { 
-        RAT_TARGET = getRandomIndex();
+    int steps = moveIndexTowards(index, RAT_TARGET, 5, TILES, nextTiles, nextUpdates);
+    
+    if (steps == 0) { 
+        RAT_TARGET = RAT_TARGET + 15; //getRandomIndex();
         updateT(nextUpdates, index);
     }
+
     
     
 }

@@ -75,14 +75,14 @@ void loadMap(Chunk *CHUNK) {
 
 
     //Centipede
-    addTile(TILES, CENTITAIL_S, 1, 0, 2); addUpdate(UPDATES, 1, 0, 2);
-    addTile(TILES, CENTIBODY_S, 1, 0, 3);
-    addTile(TILES, CENTIBODY_S, 1, 0, 4);
-    addTile(TILES, CENTIBODY_S, 1, 0, 5);
-    addTile(TILES, CENTIBODY_S, 1, 0, 6);
-    addTile(TILES, CENTIBODY_S, 1, 0, 7);
-    addTile(TILES, CENTIBODY_S, 1, 0, 8);
-    addTile(TILES, CENTIBODY_S, 1, 0, 9);
-    addTile(TILES, CENTIHEAD_S, 1, 0, 10); addUpdate(UPDATES, 1, 0, 10);
+    // addTile(TILES, CENTITAIL_S, 1, 0, 2); addUpdate(UPDATES, 1, 0, 2);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 3);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 4);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 5);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 6);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 7);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 8);
+    // addTile(TILES, CENTIBODY_S, 1, 0, 9);
+    // addTile(TILES, CENTIHEAD_S, 1, 0, 10); addUpdate(UPDATES, 1, 0, 10);
 
 }
