@@ -1,2 +1,2 @@
 int getRandomIndex();
-int moveOnce(int index, int targetIndex);
+int moveOnceTowards(int index, int targetIndex);

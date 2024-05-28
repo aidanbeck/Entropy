@@ -354,7 +354,7 @@ Tile tileBALL = {
 int RAT_TARGET = 823 + 12; //Magic Number. The index all rats will chase.
 void ruleRAT(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
     
-    int newIndex = moveOnce(index, RAT_TARGET);
+    int newIndex = moveOnceTowards(index, RAT_TARGET);
 
     if (index != newIndex && readT(newIndex, chunk) == AIR) {
         writeUpdate(RAT, newIndex, updatedChunk, scheduledUpdates);
