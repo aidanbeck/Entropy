@@ -55,6 +55,16 @@ void loadMap(Chunk *CHUNK) {
     int *chunk = CHUNK->chunk; //Should I call this "tiles" or "chunk"? I should create another standard.
     int *updates = CHUNK->updates;
 
+    //RAT
+    addTile(chunk, RAT, 3, 0, 7);
+    addUpdate(updates, 3, 0, 7);
+
+    addTile(chunk, RAT, 20, 0, 10);
+    addUpdate(updates, 20, 0, 10);
+
+    addTile(chunk, RAT, 50, 0, 5);
+    addUpdate(updates, 50, 0, 5);
+
     //Centipede
     addTile(chunk, CENTITAIL_S, 1, 0, 2); addUpdate(updates, 1, 0, 2);
     addTile(chunk, CENTIBODY_S, 1, 0, 3);

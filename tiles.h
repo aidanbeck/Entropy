@@ -43,6 +43,7 @@ enum Tiles {
     CENTITAIL_SW,
 
     BALL,
+    RAT,
 
     TILE_TYPE_COUNT
 };

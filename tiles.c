@@ -1,6 +1,7 @@
 #include "main.h"
 #include "tools.h"
 #include "tiles.h"
+#include "moves.h"
 
 //List of each tile class
 Tile TILE_TYPES[TILE_TYPE_COUNT];
@@ -350,6 +351,28 @@ Tile tileBALL = {
     .rule = ruleBALL
 };
 
+int RAT_TARGET = 823 + 12; //Magic Number. The index all rats will chase.
+void ruleRAT(int *chunk, int *updatedChunk, int *scheduledUpdates, int index) {
+    
+    int newIndex = moveOnce(index, RAT_TARGET);
+
+    if (index != newIndex && readT(newIndex, chunk) == AIR) {
+        writeUpdate(RAT, newIndex, updatedChunk, scheduledUpdates);
+        writeUpdate(AIR, index, updatedChunk, scheduledUpdates);
+    }
+
+    else {
+        RAT_TARGET = getRandomIndex();
+        updateT(scheduledUpdates, index);
+    }
+    
+}
+Tile tileRAT = {
+    .icon = 'a',
+    .name = "rat",
+    .rule = ruleRAT
+};
+
 
 //Compile array of tiles
 void compileRules() {
@@ -390,4 +413,5 @@ void compileRules() {
     TILE_TYPES[CENTITAIL_SW] = tileCENTITAIL;
 
     TILE_TYPES[BALL] = tileBALL;
+    TILE_TYPES[RAT] = tileRAT;
 }
