@@ -1,2 +1,3 @@
 int getRandomIndex();
-int moveOnceTowards(int index, int targetIndex);
+int stepIndexTowards(int index, int targetIndex);
+int moveIndexTowards(int index, int targetIndex, int distance, int *TILES, int *nextTiles, int *nextUpdates);

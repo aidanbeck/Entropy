@@ -70,6 +70,10 @@ void loadMap(Chunk *CHUNK) {
     addUpdate(UPDATES, 12, 0, 8);
 
 
+    //WALL
+    fillTile(TILES, WOOD, 40, 0, 5, 40, 0, 10);
+
+
     //Centipede
     addTile(TILES, CENTITAIL_S, 1, 0, 2); addUpdate(UPDATES, 1, 0, 2);
     addTile(TILES, CENTIBODY_S, 1, 0, 3);

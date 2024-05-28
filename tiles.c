@@ -362,19 +362,13 @@ Tile tileBALL = {
 
 int RAT_TARGET = 823 + 12; //Magic Number. The index all rats will chase.
 void ruleRAT(int *TILES, int *nextTiles, int *nextUpdates, int index) {
-    
-    int newIndex = moveOnceTowards(index, RAT_TARGET);
 
-    if ( indexIsEmpty(newIndex, TILES, nextTiles) == 1 ) {
-
-        writeUpdate(RAT, newIndex, nextTiles, nextUpdates);
-        writeUpdate(AIR, index, nextTiles, nextUpdates);
-    }
-
-    else {
+    int steps = moveIndexTowards(index, RAT_TARGET, 25, TILES, nextTiles, nextUpdates);
+    if (steps < 5) { 
         RAT_TARGET = getRandomIndex();
         updateT(nextUpdates, index);
     }
+    
     
 }
 Tile tileRAT = {

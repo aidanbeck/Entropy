@@ -1,6 +1,7 @@
 #include "main.h"
 #include "tools.h"
 #include "map.h"
+#include "tiles.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,7 +34,7 @@ int indexToZ(int index) {
     return index / LAYER_SIZE;
 }
 
-int moveOnceTowards(int index, int targetIndex) {
+int stepIndexTowards(int index, int targetIndex) {
     
     int x = indexToX(index);
     int y = indexToY(index);
@@ -58,20 +59,29 @@ int moveOnceTowards(int index, int targetIndex) {
 }
 
 
-// This takes into account if the index is available
-// int moveTowards(int index, int targetIndex, int distance) {
+/*
+    Returns with the number of steps it successfully made.
+    Should possibly refactor this using a "findDirection" function or something so that they go in a straight line.
+*/
+int moveIndexTowards(int index, int targetIndex, int distance, int *TILES, int *nextTiles, int *nextUpdates) {
 
-//     int x = indexToX(index);
-//     int y = indexToY(index);
-//     int z = indexToZ(index);
+    int tile = TILES[index];
+    int newIndex;
 
-//     int targetX = indexToX(targetIndex);
-//     int targetY = indexToY(targetIndex);
-//     int targetZ = indexToZ(targetIndex);
+    int steps = 0;
 
-//     for (int i = 0; i < distance; i++) {
+    for (int i = 0; i < distance; i++) {
 
-//     }
-    
-//     return index;
-// }
+        newIndex = stepIndexTowards(index, targetIndex);
+
+        if (indexIsEmpty(newIndex, TILES, nextTiles) == 1) {
+
+            writeUpdate(AIR, index, nextTiles, nextUpdates);
+            writeUpdate(tile, newIndex, nextTiles, nextUpdates);
+            index = newIndex;
+            steps++;
+        }
+    }
+
+    return steps;
+}
