@@ -1,6 +1,8 @@
 #include "main.h"
-#include "tiles.h"
+#include "elements/periodictable.h"
 #include "tools.h"
+
+//#include "elements/elements.h" // !!! the rule running function should be in tiles.c, so that I can just include all tiles.c functions
 
 /*
     Resets every index of an array to a set value.
@@ -36,7 +38,7 @@ void registerUpdate(int *newUpdates, int index) {
 void updateTile(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     int tile = TILES[index];
-    Tile data = TILE_TYPES[tile];
+    Element data = ELEMENTS[tile];
     
     if (data.rule != NULL) { //may want to check if data in general is defined as well
         data.rule(TILES, nextTiles, nextUpdates, index);

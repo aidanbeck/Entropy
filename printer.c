@@ -1,4 +1,4 @@
-#include "tiles.h"
+#include "elements/periodictable.h"
 #include "printer.h"
 
 /*
@@ -67,7 +67,7 @@ void printIcons1d(int *TILES) {
     for (int i = 0; i < CHUNK_SIZE; i++) {
 
         int tile = TILES[i];
-        char icon = TILE_TYPES[tile].icon;
+        char icon = ELEMENTS[tile].icon;
         printf("%c", icon);
     }
 }
@@ -84,7 +84,7 @@ void printIcons2d(int *tiles) {
             
 
             int tile = tiles[i*CHUNK_WIDTH + j];
-            char icon = TILE_TYPES[tile].icon;
+            char icon = ELEMENTS[tile].icon;
             printf("%c", icon);
         }
         printf(" %d\n",i);
@@ -108,9 +108,9 @@ void printIcons3d(int *TILES, int isometric) {
                 if (tile != AIR /*&& tile != STONE*/) {
 
                     if (isometric == 1) {
-                        frame[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = TILE_TYPES[tile].icon; //isometric
+                        frame[(z+y)*mapHeight+x+(CHUNK_HEIGHT-y)] = ELEMENTS[tile].icon; //isometric
                     } else {
-                        frame[z*mapHeight+x] = TILE_TYPES[tile].icon; //top down
+                        frame[z*mapHeight+x] = ELEMENTS[tile].icon; //top down
                     }
                 }
             }

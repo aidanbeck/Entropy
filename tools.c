@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tools.h" //Only used to get Mesh struct
 #include "updates.h" //Only used for registerUpdate
-#include "barista.h" //Sometimes used for jsWriteIcon
+#include "barista/barista.h" //Sometimes used for jsWriteIcon
 
 /*
     ## Naming Questions ##

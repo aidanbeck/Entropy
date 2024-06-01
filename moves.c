@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tools.h"
 #include "map.h"
-#include "tiles.h"
+#include "elements/periodictable.h"
 #include <stdio.h>
 #include <stdlib.h>
 

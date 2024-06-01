@@ -1,5 +1,5 @@
 #include "tools.h"
-#include "tiles.h"
+#include "elements/periodictable.h"
 
 /*
     getIndex, addTile, addUpdate, & fillTile seem to be redundant due to the functions in
@@ -68,6 +68,10 @@ void loadMap(Chunk *CHUNK) {
     //BALL
     addTile(TILES, BALL, 12, 0, 8);
     addUpdate(UPDATES, 12, 0, 8);
+
+    //SPAWNER
+    addTile(TILES, SPAWN_RANDOM, 0, 0, 0);
+    addUpdate(UPDATES, 0, 0, 0);
 
 
     //WALL

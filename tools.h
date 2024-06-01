@@ -1,3 +1,5 @@
+#ifndef TOOLS_H
+#define TOOLS_H
 
 //Should "Mesh" and Mesh-related code be stored in a "Meshes.c" file?
 typedef struct {
@@ -23,3 +25,5 @@ void readMesh(int index, Mesh *mesh, int *array, int *TILES);
 
 int indexIsEmpty(int index, int *TILES, int *nextTiles);
 void meshIsEmpty(int index, Mesh *mesh, int *array, int *TILES, int *nextTiles);
+
+#endif

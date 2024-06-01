@@ -2,6 +2,8 @@
     ## MODE 0 ##
     gcc main.c printer.c map.c tiles.c tools.c updates.c moves.c -o main.exe -Wall -Wpedantic -Werror
 
+    gcc *.c elements/ *.c -o main.exe -Wall -Wpedantic
+
     ## MODE 1 ##
     emcc -o ../deadletter/latte.html main.c printer.c map.c tiles.c tools.c updates.c barista.c -O0 --shell-file ../barista/html_template/latte.html -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_gameLoop', '_writeFromJS']"
 
@@ -14,9 +16,12 @@
 #include "main.h" //
 #include "printer.h" //
 #include "map.h" //
-#include "tiles.h"
+#include "elements/periodictable.h"
 #include "tools.h" //
 #include "updates.h"
+
+#include <stdio.h>
+#include <unistd.h>
 
 Chunk WORLD[WORLD_SIZE];
 int chunksWithUpdates[WORLD_SIZE];
@@ -24,7 +29,7 @@ int tick = 0;
 
 int main() {
 
-    compileRules();
+    compileElements();
 
     //Create Example Chunk
     Chunk *startChunk = &WORLD[0];
