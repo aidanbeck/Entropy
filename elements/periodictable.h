@@ -20,7 +20,7 @@ enum Dictionary {
     FIRE,
     FIRE2,
 
-    CENTIHEAD_N, //centipede parts
+    CENTIHEAD_N,
     CENTIHEAD_S,
     CENTIHEAD_E,
     CENTIHEAD_W,
@@ -58,8 +58,17 @@ enum Dictionary {
     List of Element "externs".
     Allows files that link elements/periodictable.h to access element data. (or can they access it without?)
 */
-extern Element tileSPAWN_RANDOM;
-extern Element tileWATER;
+
+// simples.c
+extern Element eAIR;
+extern Element eSTONE;
+extern Element eWOOD;
+extern Element eFIRE;
+extern Element eFIRE2;
+
+extern Element eCENTIBODY;
+
+extern Element eSPAWN_RANDOM;
 
 
 /*

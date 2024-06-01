@@ -56,18 +56,18 @@ void loadMap(Chunk *CHUNK) {
     int *UPDATES = CHUNK->UPDATES;
 
     //RAT
-    addTile(TILES, RAT, 3, 0, 7);
-    addUpdate(UPDATES, 3, 0, 7);
+    // addTile(TILES, RAT, 3, 0, 7);
+    // addUpdate(UPDATES, 3, 0, 7);
 
-    addTile(TILES, RAT, 20, 0, 10);
-    addUpdate(UPDATES, 20, 0, 10);
+    // addTile(TILES, RAT, 20, 0, 10);
+    // addUpdate(UPDATES, 20, 0, 10);
 
-    addTile(TILES, RAT, 50, 0, 5);
-    addUpdate(UPDATES, 50, 0, 5);
+    // addTile(TILES, RAT, 50, 0, 5);
+    // addUpdate(UPDATES, 50, 0, 5);
 
-    //BALL
-    addTile(TILES, BALL, 12, 0, 8);
-    addUpdate(UPDATES, 12, 0, 8);
+    // //BALL
+    // addTile(TILES, BALL, 12, 0, 8);
+    // addUpdate(UPDATES, 12, 0, 8);
 
     //SPAWNER
     addTile(TILES, SPAWN_RANDOM, 0, 0, 0);

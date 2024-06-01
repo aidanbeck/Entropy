@@ -9,5 +9,12 @@ void compileElements() {
         Add each custom Element to the ELEMENTS array.
         ELEMENTS[DICTIONARY_NAME] = ElementVariable;
     */
-   ELEMENTS[SPAWN_RANDOM] = tileSPAWN_RANDOM;
+   ELEMENTS[AIR]    = eAIR;
+   ELEMENTS[STONE]  = eSTONE;
+   ELEMENTS[WOOD]   = eWOOD;
+   ELEMENTS[FIRE]   = eFIRE;
+   ELEMENTS[FIRE2]  = eFIRE2;
+
+
+   ELEMENTS[SPAWN_RANDOM] = eSPAWN_RANDOM;
 }

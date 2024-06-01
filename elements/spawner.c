@@ -2,35 +2,54 @@
 #include "../tools.h"
 #include "../moves.h"
 
-int spawnDelay = 0;
+int spawnTimer = 0;
+int spawnDelay = 5;
+
 void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
-    if (spawnDelay > 0) {
+    /*
+        updateT(nextUpdates, index);
 
-        spawnDelay++;
-        if (spawnDelay > 10) { spawnDelay = 0; }
+        updateT crashes because CURRENTLY, updateT runs registerUpdate, which updates many tiles.
+        Because this is on the border, it updates tiles out of bounds and seg faults.
+
+        updateT should be changed to update a single index, and there should be an updateMesh.
+        Other tiles should be refactored to use an updateMesh function.
+
+        For now, I will manually re-update this tile.
+    */
+   nextUpdates[index] = 1;
+
+
+    if (spawnTimer > 0) {
+
+        spawnTimer++;
+        if (spawnTimer > spawnDelay) { spawnTimer = 0; }
 
         return;
     }
 
-    spawnDelay++;
-
-    printf("\n%d", spawnDelay);
+    spawnTimer++;
 
     int randomIndex = getRandomIndex();
+    int canPlace = 0;
+
     for (int i = 0; i < 10; i++) {
 
-        if ( readT(randomIndex, TILES) != AIR ) {
+        if ( indexIsEmpty(randomIndex, TILES, nextTiles) != 1 ) {
             randomIndex = getRandomIndex();
-            continue;
+        } else {
+            canPlace = 1;
+            break;
         }
-        break;
     }
 
-    writeUpdate(WOOD, randomIndex, nextTiles, nextUpdates);
+    if (canPlace == 1) {
+        writeUpdate(WOOD, randomIndex, nextTiles, nextUpdates);
+    }
 }
 
-Element tileSPAWN_RANDOM = {
+Element eSPAWN_RANDOM = {
     .icon = 'R',
     .name = "Spawner (Random)",
     .rule = ruleSPAWN_RANDOM

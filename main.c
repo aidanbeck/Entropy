@@ -1,8 +1,6 @@
 /*
     ## MODE 0 ##
-    gcc main.c printer.c map.c tiles.c tools.c updates.c moves.c -o main.exe -Wall -Wpedantic -Werror
-
-    gcc *.c elements/ *.c -o main.exe -Wall -Wpedantic
+    gcc *.c elements/ *.c -o main.exe -Wall -Wpedantic -Werror
 
     ## MODE 1 ##
     emcc -o ../deadletter/latte.html main.c printer.c map.c tiles.c tools.c updates.c barista.c -O0 --shell-file ../barista/html_template/latte.html -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_gameLoop', '_writeFromJS']"
