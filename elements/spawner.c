@@ -6,7 +6,7 @@ int spawnTimer = 0;
 int spawnDelay = 5;
 
 int EnemyNum = 4;
-int Enemies[4] = { WOOD, GAS, SPAWN_RANDOM, FIRE };
+int Enemies[4] = { WOOD, GAS, PACKAGE, FIRE };
 
 void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 

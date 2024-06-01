@@ -56,13 +56,13 @@ void loadMap(Chunk *CHUNK) {
     int *UPDATES = CHUNK->UPDATES;
 
     //SPAWNER
-    addTile(TILES, SPAWN_RANDOM, 0, 0, 0);
-    addUpdate(UPDATES, 0, 0, 0);
+    // addTile(TILES, SPAWN_RANDOM, 0, 0, 0);
+    // addUpdate(UPDATES, 0, 0, 0);
 
     //WALL
-    fillTile(TILES, GAS, 40, 0, 1, 40, 0, 13);
+    // fillTile(TILES, GAS, 40, 0, 1, 40, 0, 13);
 
-    //PACKAGE SPAWNERS
+    // //PACKAGE SPAWNERS
     fillTile(TILES, SPAWNER, 147, 0, 5, 149, 0, 7);
 
     addUpdate(UPDATES, 147, 0, 5);

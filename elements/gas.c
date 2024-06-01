@@ -56,13 +56,12 @@ void damageGAS(int *TILES, int *nextTiles, int *nextUpdates, int index) {
     for (int i = 0; i < 20; i++) {
 
         if (indexInBounds(directionIndex[i]) == 0) { continue; }
-        
+
         if ( indexIsEmpty( directionIndex[i], TILES, nextTiles) == 1) {
             writeUpdate(FIRE, directionIndex[i], nextTiles, nextUpdates); //segway
             printf("[%d]",directionIndex[i]);
         }
     }
-
 }
 
 void ruleGAS(int *TILES, int *nextTiles, int *nextUpdates, int index) {
