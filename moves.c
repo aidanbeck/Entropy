@@ -10,7 +10,7 @@ int setSeedReady = 0;
 int getRandomIndex() {
 
     if (setSeedReady == 0) {
-        srand(137);
+        srand(138);
         setSeedReady = 1;
     }
 
@@ -32,6 +32,18 @@ int indexToY(int index) {
 int indexToZ(int index) {
     int LAYER_SIZE = CHUNK_WIDTH * CHUNK_LENGTH;
     return index / LAYER_SIZE;
+}
+
+
+int indexInBounds(int index) {
+
+    int x = indexToX(index);
+    int y = indexToY(index);
+
+    if (x <= 1 || x >= 150) { return 0; }
+    if (y <= 1 || y >= 15) { return 0; }
+
+    return 1;
 }
 
 

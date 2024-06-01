@@ -37,7 +37,7 @@ void ruleFIRE2(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     for (int i = 0; i < 4; i++) {
 
-        if (tileInDirection[i] == WOOD) {
+        if (tileInDirection[i] == WOOD || tileInDirection[i] == SPAWN_RANDOM) {
             writeUpdate(FIRE, directionIndex[i], nextTiles, nextUpdates);
         }
     }

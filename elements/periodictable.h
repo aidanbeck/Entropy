@@ -52,6 +52,7 @@ enum Dictionary {
     SPAWNER,
     SPAWN_RANDOM,
     PACKAGE,
+    GAS,
 
     DICTIONARY_LENGTH
 };
@@ -68,6 +69,7 @@ extern Element eWOOD;
 extern Element eFIRE;
 extern Element eFIRE2;
 extern Element ePACKAGE;
+extern Element eGAS;
 
 extern Element eCENTIBODY;
 

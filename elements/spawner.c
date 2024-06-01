@@ -6,7 +6,7 @@ int spawnTimer = 0;
 int spawnDelay = 5;
 
 int EnemyNum = 4;
-int Enemies[4] = { WOOD, PACKAGE, STONE, FIRE };
+int Enemies[4] = { WOOD, GAS, SPAWN_RANDOM, FIRE };
 
 void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
@@ -40,7 +40,7 @@ void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     for (int i = 0; i < 10; i++) {
 
-        if ( indexIsEmpty(randomIndex, TILES, nextTiles) != 1 ) {
+        if ( indexIsEmpty(randomIndex, TILES, nextTiles) != 1) {
             randomIndex = getRandomIndex();
         } else {
             canPlace = 1;
