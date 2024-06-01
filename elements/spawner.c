@@ -5,6 +5,9 @@
 int spawnTimer = 0;
 int spawnDelay = 5;
 
+int EnemyNum = 4;
+int Enemies[4] = { WOOD, WOOD, FIRE, SPAWN_RANDOM };
+
 void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     /*
@@ -31,6 +34,7 @@ void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
     spawnTimer++;
 
+    int randomEnemy = Enemies[ rand() % EnemyNum ];
     int randomIndex = getRandomIndex();
     int canPlace = 0;
 
@@ -45,7 +49,7 @@ void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
     }
 
     if (canPlace == 1) {
-        writeUpdate(WOOD, randomIndex, nextTiles, nextUpdates);
+        writeUpdate(randomEnemy, randomIndex, nextTiles, nextUpdates);
     }
 }
 
