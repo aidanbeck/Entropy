@@ -49,7 +49,9 @@ enum Dictionary {
 
     BALL,
     RAT,
+    SPAWNER,
     SPAWN_RANDOM,
+    PACKAGE,
 
     DICTIONARY_LENGTH
 };
@@ -65,9 +67,11 @@ extern Element eSTONE;
 extern Element eWOOD;
 extern Element eFIRE;
 extern Element eFIRE2;
+extern Element ePACKAGE;
 
 extern Element eCENTIBODY;
 
+extern Element eSPAWNER;
 extern Element eSPAWN_RANDOM;
 
 

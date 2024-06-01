@@ -55,38 +55,25 @@ void loadMap(Chunk *CHUNK) {
     int *TILES = CHUNK->TILES;
     int *UPDATES = CHUNK->UPDATES;
 
-    //RAT
-    // addTile(TILES, RAT, 3, 0, 7);
-    // addUpdate(UPDATES, 3, 0, 7);
-
-    // addTile(TILES, RAT, 20, 0, 10);
-    // addUpdate(UPDATES, 20, 0, 10);
-
-    // addTile(TILES, RAT, 50, 0, 5);
-    // addUpdate(UPDATES, 50, 0, 5);
-
-    // //BALL
-    // addTile(TILES, BALL, 12, 0, 8);
-    // addUpdate(UPDATES, 12, 0, 8);
 
     //SPAWNER
     addTile(TILES, SPAWN_RANDOM, 0, 0, 0);
     addUpdate(UPDATES, 0, 0, 0);
 
-
     //WALL
     fillTile(TILES, WOOD, 40, 0, 5, 40, 0, 10);
 
+    //PACKAGE SPAWNERS
+    fillTile(TILES, SPAWNER, 147, 0, 5, 150, 0, 7);
 
-    //Centipede
-    // addTile(TILES, CENTITAIL_S, 1, 0, 2); addUpdate(UPDATES, 1, 0, 2);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 3);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 4);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 5);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 6);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 7);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 8);
-    // addTile(TILES, CENTIBODY_S, 1, 0, 9);
-    // addTile(TILES, CENTIHEAD_S, 1, 0, 10); addUpdate(UPDATES, 1, 0, 10);
+    addUpdate(UPDATES, 147, 0, 5);
+    addUpdate(UPDATES, 148, 0, 5);
+    addUpdate(UPDATES, 149, 0, 5);
+    addUpdate(UPDATES, 147, 0, 6);
+    addUpdate(UPDATES, 148, 0, 6);
+    addUpdate(UPDATES, 149, 0, 6);
+    addUpdate(UPDATES, 147, 0, 7);
+    addUpdate(UPDATES, 148, 0, 7);
+    addUpdate(UPDATES, 149, 0, 7);
 
 }

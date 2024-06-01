@@ -15,6 +15,11 @@ Element eWOOD = {
     .name = "wood",
 };
 
+Element ePACKAGE = {
+    .icon = 'H',
+    .name = "Package",
+};  
+
 Element eCENTIBODY = {
     .icon = ':',
     .name = "centipede body",

@@ -6,7 +6,7 @@ int spawnTimer = 0;
 int spawnDelay = 5;
 
 int EnemyNum = 4;
-int Enemies[4] = { WOOD, WOOD, FIRE, SPAWN_RANDOM };
+int Enemies[4] = { WOOD, PACKAGE, STONE, FIRE };
 
 void ruleSPAWN_RANDOM(int *TILES, int *nextTiles, int *nextUpdates, int index) {
 
@@ -57,4 +57,27 @@ Element eSPAWN_RANDOM = {
     .icon = 'R',
     .name = "Spawner (Random)",
     .rule = ruleSPAWN_RANDOM
+};
+
+
+
+
+int spawnElement = PACKAGE;
+int spawnX = -4;
+
+void ruleSPAWN(int *TILES, int *nextTiles, int *nextUpdates, int index) {
+
+   nextUpdates[index] = 1;
+
+    int spawnIndex = moveIndexX(index, spawnX);
+
+    if ( indexIsEmpty(spawnIndex, TILES, nextTiles) == 1 ) {
+        writeUpdate(spawnElement, spawnIndex, nextTiles, nextUpdates);
+    }
+}
+
+Element eSPAWNER = {
+    .icon = 'S',
+    .name = "Spawner",
+    .rule = ruleSPAWN
 };
