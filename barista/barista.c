@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <emscripten/emscripten.h>
-#include "main.h"
-#include "updates.h"
-#include "tools.h"
+#include "../main.h"
+#include "../updates.h"
+#include "../tools.h"
 
 extern Chunk WORLD[WORLD_SIZE];
 extern int chunksWithUpdates[WORLD_SIZE];
@@ -22,6 +22,8 @@ extern EMSCRIPTEN_KEEPALIVE int gameLoop() {
 }
 
 extern EMSCRIPTEN_KEEPALIVE int writeFromJS(int index, int tile) {
+
+    index++;
 
     Chunk *toWrite = &WORLD[0];
     int *tiles = toWrite->TILES;

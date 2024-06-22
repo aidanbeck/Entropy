@@ -21,9 +21,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
+int tick = 0;
 Chunk WORLD[WORLD_SIZE];
 int chunksWithUpdates[WORLD_SIZE];
-int tick = 0;
 
 int main() {
 
