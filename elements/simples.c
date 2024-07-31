@@ -1,26 +1,43 @@
-#include "periodictable.h"
+#include "periodicTable.h"
+#include "../laws/lawTable.h" //to access common laws
 
-Element eAIR = {
+Element E_AIR = {
     .icon = ' ',
-    .name = "air",
+    .defaultLaw = &L_NOTHING
 };
 
-Element eSTONE = {
+Element E_STONE = {
     .icon = '#',
-    .name = "stone",
+    .defaultLaw = &L_NOTHING
 };
 
-Element eWOOD = {
+Element E_WOOD = {
     .icon = '+',
-    .name = "wood",
+    .defaultLaw = &L_NOTHING
 };
 
-Element ePACKAGE = {
+Element E_PACKAGE = {
     .icon = 'H',
-    .name = "Package",
+    .defaultLaw = &L_NOTHING
 };  
 
-Element eCENTIBODY = {
+Element E_CENTIBODY = {
     .icon = ':',
-    .name = "centipede body",
-};  
+    .defaultLaw = &L_NOTHING
+};
+
+
+
+// Not Simple But Temporary
+void evaporate(int index, Chunk *CHUNK) { CHUNK->TILES[index] = 0; }
+Law     l_EVAPORATE = { .func = evaporate };
+Element E_TRAIL = { .defaultLaw = &l_EVAPORATE, .icon = '~'};
+
+
+void cow(int index, Chunk *CHUNK) {
+    int returnIndex;
+    int steps = moveIndexTowards(index, index+10, 9, &returnIndex, CHUNK);
+    if (steps == 0) { update(index, CHUNK); }
+}
+Law l_COW = { .func = cow};
+Element E_COW = { .defaultLaw = &l_COW, .icon = 'n'};

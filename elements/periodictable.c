@@ -1,22 +1,24 @@
-#include "../elements.h"
-#include "periodictable.h"
+#include "../main.h"
+#include "../physics.h"
+#include "periodicTable.h"
 
-Element ELEMENTS[DICTIONARY_LENGTH];
+void compileElements(Physics *PHYSICS) {
 
-void compileElements() {
+    Element *E = PHYSICS->PeriodicTable;
 
-    /*
-        Add each custom Element to the ELEMENTS array.
-        ELEMENTS[DICTIONARY_NAME] = ElementVariable;
-    */
-   ELEMENTS[AIR]    = eAIR;
-   ELEMENTS[STONE]  = eSTONE;
-   ELEMENTS[WOOD]   = eWOOD;
-   ELEMENTS[FIRE]   = eFIRE;
-   ELEMENTS[FIRE2]  = eFIRE2;
-   ELEMENTS[PACKAGE]= ePACKAGE;
-   ELEMENTS[GAS]    = eGAS;
+    E[AIR] = E_AIR;
+    E[STONE] = E_STONE;
+    E[WOOD] = E_WOOD;
+    E[PACKAGE] = E_PACKAGE;
+    E[CENTIBODY] = E_CENTIBODY;
+    E[FIRE] = E_FIRE;
+    E[FIRE2] = E_FIRE2;
+    E[GAS] = E_GAS;
 
-    ELEMENTS[SPAWNER] = eSPAWNER;
-    ELEMENTS[SPAWN_RANDOM] = eSPAWN_RANDOM;
+    E[SPAWNRANDOM] = E_SPAWNRANDOM;
+    E[SPAWNPACKAGE] = E_SPAWNPACKAGE;
+
+    E[TRUCK] = E_TRUCK;
+    E[TRAIL] = E_TRAIL;
+    E[COW] = E_COW;
 }

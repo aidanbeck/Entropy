@@ -1,87 +1,48 @@
 #ifndef PERIODICTABLE_H
 #define PERIODICTABLE_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 #include "../main.h"
-#include "../elements.h"
+#include "../physics.h"
 
-/*
-    Dictionary of Element "enums".
-    Useful for easily referring to an element type in code.
-*/
-enum Dictionary {
+enum E_Dictionary {
+
     AIR,
     STONE,
     WOOD,
+    PACKAGE,
+    CENTIBODY,
     FIRE,
     FIRE2,
-
-    CENTIHEAD_N,
-    CENTIHEAD_S,
-    CENTIHEAD_E,
-    CENTIHEAD_W,
-    CENTIHEAD_NE,
-    CENTIHEAD_NW,
-    CENTIHEAD_SE,
-    CENTIHEAD_SW,
-
-    CENTIBODY_N,
-    CENTIBODY_S,
-    CENTIBODY_E,
-    CENTIBODY_W,
-    CENTIBODY_NE,
-    CENTIBODY_NW,
-    CENTIBODY_SE,
-    CENTIBODY_SW,
-
-    CENTITAIL_N,
-    CENTITAIL_S,
-    CENTITAIL_E,
-    CENTITAIL_W,
-    CENTITAIL_NE,
-    CENTITAIL_NW,
-    CENTITAIL_SE,
-    CENTITAIL_SW,
-
-    BALL,
-    RAT,
-    SPAWNER,
-    SPAWN_RANDOM,
-    PACKAGE,
     GAS,
+    SPAWNRANDOM,
+    SPAWNPACKAGE,
+    TRUCK,
+   
+    TRAIL,
+    COW,
 
-    DICTIONARY_LENGTH
+    ELEMENT_COUNT
 };
 
-/*
-    List of Element "externs".
-    Allows files that link elements/periodictable.h to access element data. (or can they access it without?)
-*/
+// Extern List
+extern Element E_AIR;
+extern Element E_STONE;
+extern Element E_WOOD;
+extern Element E_PACKAGE;
+extern Element E_CENTIBODY;
+extern Element E_FIRE;
+extern Element E_FIRE2;
+extern Element E_GAS;
+extern Element E_SPAWNRANDOM;
+extern Element E_SPAWNPACKAGE;
+extern Element E_TRUCK;
 
-// simples.c
-extern Element eAIR;
-extern Element eSTONE;
-extern Element eWOOD;
-extern Element eFIRE;
-extern Element eFIRE2;
-extern Element ePACKAGE;
-extern Element eGAS;
+extern Element E_TRAIL;
+extern Element E_COW;
 
-extern Element eCENTIBODY;
-
-extern Element eSPAWNER;
-extern Element eSPAWN_RANDOM;
-
-
-/*
-    Compiles ELEMENTS list.
-    These are down here so that DICTIONARY_LENGTH can be defined.
-*/
-extern Element ELEMENTS[DICTIONARY_LENGTH];
-void compileElements();
+void compileElements(Physics *PHYSICS);
+void setTruckIndex(int index);
+void setTruckTarget(int index);
+extern Truck PLAYER; //good idea?
 
 #endif

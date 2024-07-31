@@ -1,49 +1,48 @@
-#include "periodictable.h"
-#include "../tools.h"
-#include "../moves.h"
+#include "periodicTable.h"
 
-Mesh CompassRose[4] = {
-    //  0 
-    // 2&3
-    //  1 
-    { .x= 0,    .y= -1,     .z= 0, .length=4 }, //N
-    { .x= 0,    .y= 1,      .z= 0 }, //S
-    { .x= 1,    .y= 0,      .z= 0 }, //E
-    { .x= -1,   .y= 0,      .z= 0 }, //W
+Mesh compassRose[4] = {
+    { .x = 0, .y = -1, .z = 0, .length = 4},
+    { .x = 0, .y = 1, .z = 0},
+    { .x = -1, .y = 0, .z = 0},
+    { .x = 1, .y = 0, .z = 0},
 };
 
 //FIRE
-void ruleFIRE(int *TILES, int *nextTiles, int *nextUpdates, int index) {
-
-    writeUpdate(FIRE2, index, nextTiles, nextUpdates);
+void burnFrame(int index, Chunk *CHUNK) {
+    uplace(FIRE2, index, CHUNK);
 }
-Element eFIRE = {
+Law     l_BURNFRAME = { .func = burnFrame };
+Element E_FIRE = {
     .icon = '%',
-    .name = "fire",
-    .rule = ruleFIRE
+    .defaultLaw = &l_BURNFRAME
 };
 
 //FIRE2
-void ruleFIRE2(int *TILES, int *nextTiles, int *nextUpdates, int index) {
+void fireSpread(int index, Chunk *CHUNK) {
 
-    writeUpdate(AIR, index, nextTiles, nextUpdates); //removed smoke for now
+    uplace(AIR, index, CHUNK); //removed smoke for now
 
-    int tileInDirection[4];
-    readMesh(index, CompassRose, tileInDirection, TILES);
+    int meshIndexes[4];
+    getMeshIndexes(index, compassRose, meshIndexes);
 
-    int directionIndex[4];
-    getMeshIndexes(index, CompassRose, directionIndex);
-
+    uint8_t meshTiles[4];
+    viewFaces(index, meshTiles, CHUNK);
 
     for (int i = 0; i < 4; i++) {
 
-        if (tileInDirection[i] == WOOD || tileInDirection[i] == SPAWN_RANDOM) {
-            writeUpdate(FIRE, directionIndex[i], nextTiles, nextUpdates);
+        if (meshTiles[i] == WOOD) {
+            uplaces(FIRE, meshIndexes[i], CHUNK);
         }
     }
 }
-Element eFIRE2 = {
+Law     l_FIRESPREAD = { .func = fireSpread };
+Element E_FIRE2 = {
     .icon = '%',
-    .name = "FIRE",
-    .rule = ruleFIRE2
+    .defaultLaw = &l_FIRESPREAD
 };
+
+/*
+    Potential Improvements Notes:
+
+
+*/

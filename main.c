@@ -1,57 +1,60 @@
-/*
-    ## MODE 0 ##
-    gcc *.c elements/ *.c -o main.exe -Wall -Wpedantic -Werror
+#include "main.h"
 
-    ## MODE 1 ##
-    emcc -o ../deadletter/latte.html main.c printer.c map.c tiles.c tools.c updates.c barista.c -O0 --shell-file ../barista/html_template/latte.html -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_gameLoop', '_writeFromJS']"
+//for initializeWorld
+#include "laws/lawTable.h"
+#include "elements/periodicTable.h"
 
-    ## Files that reference emscripten functions ##
-    * tools.c -- writeT
-*/
-
-#define MODE 0
-
-#include "main.h" //
-#include "printer.h" //
-#include "map.h" //
-#include "elements/periodictable.h"
-#include "tools.h" //
-#include "updates.h"
-
+//for printing
+#include "devtools/printer.h"
 #include <stdio.h>
+
+//for tick timing
 #include <unistd.h>
 
-int tick = 0;
-Chunk WORLD[WORLD_SIZE];
-int chunksWithUpdates[WORLD_SIZE];
+//barista
+#include "barista/barista.h"
+
+void initializeWorld(Chunk *CHUNK, Physics *PHYSICS) {
+    CHUNK->physics = PHYSICS;
+    CHUNK->tick = 0;
+    CHUNK->hotLawCount = 2;
+    CHUNK->hotLawMax = 255;
+    initializeArray(CHUNK->TILES, CHUNK_SIZE, 0);
+    initializeArray(CHUNK->UPDATES, CHUNK_SIZE, 0);
+    prepareChunk(CHUNK);
+
+    compileLaws(PHYSICS);
+    compileElements(PHYSICS);
+
+    //Player is defined globally. This may not be a good idea.
+    CHUNK->truck = &PLAYER;
+    PLAYER.chunk = CHUNK;
+    PLAYER.index = moveIndex(0, PLAYER.x, PLAYER.y, 0);
+    PLAYER.target = PLAYER.index;
+}
+
+void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
+    for (; CHUNK->tick < TICK_LIMIT; CHUNK->tick++) {
+        printIcons2d(CHUNK);
+        printUpdates2d(CHUNK);
+        printHotLawTable(CHUNK);
+        updateChunk(CHUNK, PHYSICS);
+
+        setTruckTarget(1050-1);
+
+        usleep(TICK_DURATION);  
+    }
+}
 
 int main() {
 
-    compileElements();
+    Chunk CHUNK;
+    Physics PHYSICS;
+    initializeWorld(&CHUNK, &PHYSICS);
+    loadMap(&CHUNK);
+    setBaristaChunk(&CHUNK);
 
-    //Create Example Chunk
-    Chunk *startChunk = &WORLD[0];
-    chunksWithUpdates[0] = 1;
-
-    //Map Preset
-    createBorder(startChunk);
-    loadMap(startChunk);
-
-    if (MODE == 0) { //Should this be it's own function?
-
-        //Render & Update Example Chunk
-        for (int i = 0; i < TICK_LIMIT; i++) {
-
-            printf("\n\n---------------------Tick %d---------------------", tick);
-            printUpdates2d(startChunk->UPDATES);
-            printIcons2d(startChunk->TILES);
-            
-            updateWorld(WORLD, chunksWithUpdates);
-            tick++;
-            usleep(TICK_DURATION);
-        }
-    }
+    if (COMPILE_MODE == 0) { loopTicks(&CHUNK, &PHYSICS); }
     
-
     return 0;
 }

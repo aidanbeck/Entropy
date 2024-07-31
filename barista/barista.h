@@ -1,2 +1,8 @@
+#ifndef BARISTA_H
+#define BARISTA_H
 
-void jsWriteIcon(int index, int tile);
+#include "../main.h"
+void placeToJS(int index, int tile);
+void setBaristaChunk(Chunk *CHUNK);
+
+#endif

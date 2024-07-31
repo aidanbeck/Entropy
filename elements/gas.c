@@ -1,11 +1,6 @@
-#include "periodictable.h"
-#include "../tools.h"
-#include "../moves.h"
+#include "periodicTable.h"
 
-Mesh CompassRose2[4] = {
-    //  0 
-    // 2&3
-    //  1 
+Mesh compassRose2[4] = {
     { .x= 0,    .y= -1,     .z= 0, .length=4 }, //N
     { .x= 0,    .y= 1,      .z= 0 }, //S
     { .x= 1,    .y= 0,      .z= 0 }, //E
@@ -46,44 +41,54 @@ Mesh Explosion[20] = {
     { .x= -1,   .y=  2,     .z= 0 },
 };
 
-void damageGAS(int *TILES, int *nextTiles, int *nextUpdates, int index) {
+void explode(int index, Chunk *CHUNK) {
     
-    writeUpdate(FIRE, index, nextTiles, nextUpdates); //turn into fire
+    uplace(FIRE, index, CHUNK); //turn into fire
 
-    int directionIndex[20];
-    getMeshIndexes(index, Explosion, directionIndex);
+    int meshIndexes[20];
+    getMeshIndexes(index, Explosion, meshIndexes);
 
     for (int i = 0; i < 20; i++) {
 
-        if (indexInBounds(directionIndex[i]) == 0) { continue; }
+        if (indexIsEmpty(meshIndexes[i], CHUNK) == 0) {continue;}
+        if (indexInBounds(meshIndexes[i]) == 0)       {continue;}
 
-        if ( indexIsEmpty( directionIndex[i], TILES, nextTiles) == 1) {
-            writeUpdate(FIRE, directionIndex[i], nextTiles, nextUpdates); //segway
-            printf("[%d]",directionIndex[i]);
-        }
+        uplaces(FIRE, meshIndexes[i], CHUNK);
     }
 }
+Law     l_EXPLODE = { .func = explode };
 
-void ruleGAS(int *TILES, int *nextTiles, int *nextUpdates, int index) {
+void explodeOnFlame(int index, Chunk *CHUNK) {
 
-    int tileInDirection[4];
-    readMesh(index, CompassRose2, tileInDirection, TILES);
+    uint8_t meshTiles[4];
+    viewMesh(index, compassRose2, meshTiles, CHUNK);
 
-    int directionIndex[4];
-    getMeshIndexes(index, CompassRose2, directionIndex);
+    int meshIndexes[4];
+    getMeshIndexes(index, compassRose2, meshIndexes);
 
 
     for (int i = 0; i < 4; i++) {
 
-        if (tileInDirection[i] == FIRE) {
-            
-            damageGAS(TILES, nextTiles, nextUpdates, index);
-            break;
-        }
+        if (meshTiles[i] != FIRE) { continue; }
+        explode(index, CHUNK);
+        break;
     }
 }
-Element eGAS = {
+Law     l_EXPLODEONFLAME = { .func = explodeOnFlame };
+Element E_GAS = {
     .icon = 'U',
-    .name = "Gas can",
-    .rule = ruleGAS
+    .defaultLaw = &l_EXPLODEONFLAME,
+    .endOfPush = &l_EXPLODE
 };
+
+/*
+    If I want gas to "explode" after being pushed, how should I go about this?
+
+    Perhaps the moveTowardsIndex function could return:
+    - steps it took
+    - steps it tried to take
+    - the new index
+
+    Then, in the "push" function, it could take the newIndex, and run that element's "endOfPush" law if it has one.
+    And, E_GAS's endOfPush law will be Explode
+*/

@@ -1,37 +1,47 @@
-#include <stdio.h>
-#include <emscripten/emscripten.h>
 #include "../main.h"
+
+Chunk *baristaChunk;
+
+void setBaristaChunk(Chunk *CHUNK) {
+    baristaChunk = CHUNK;
+}
+
+#if COMPILE_MODE == 1 //emcc mode
+
+#include <emscripten/emscripten.h>
 #include "../updates.h"
-#include "../tools.h"
+#include "../physics.h"
 
-extern Chunk WORLD[WORLD_SIZE];
-extern int chunksWithUpdates[WORLD_SIZE];
-extern int tick;
-
-void jsWriteIcon(int index, int tile) {
+void placeToJS(int index, int tile) { //write icon TO js FROM C
     EM_ASM({
         Module.writeIcon($0, $1);
     }, index, tile);
 }
 
-extern EMSCRIPTEN_KEEPALIVE int gameLoop() {
+extern EMSCRIPTEN_KEEPALIVE int tickFromJS() { //take target index as input?
 
-    updateWorld(WORLD, chunksWithUpdates);
-    tick++;
-    return tick;
+    updateChunk(baristaChunk, baristaChunk->physics);
+    //setTruckTarget(targetIndex);
+    return 0;
 }
 
-extern EMSCRIPTEN_KEEPALIVE int writeFromJS(int index, int tile) {
+extern EMSCRIPTEN_KEEPALIVE int placeFromJS(int index, int tile) {
 
-    index++;
+    //index++;
+    
+    uint8_t byteTile = (uint8_t)tile;
 
-    Chunk *toWrite = &WORLD[0];
-    int *tiles = toWrite->TILES;
-    int *UPDATES = toWrite->UPDATES;   
+    uplaces(byteTile, index, baristaChunk);
 
-    //Write to C
-    writeT(tile, index, tiles);
-    updateT(UPDATES, index);
-
-    return UPDATES[index];
+    return baristaChunk->UPDATES[index];
 }
+
+extern EMSCRIPTEN_KEEPALIVE void setTruckTarget(int index) {
+
+    Truck *truck = baristaChunk->truck;
+
+    //update truck information
+    truck->target = index;  
+}
+
+#endif
