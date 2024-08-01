@@ -26,6 +26,7 @@ typedef struct {
     int y;
     int tires;
     int gas;
+    int points;
     Chunk *chunk;
 } Truck;
 

@@ -90,10 +90,6 @@
     - They die to getting pushed
     - If the player has no tires, and they are adjacent, trigger a "game over" function (access client from barista)
 
-- Make "Mailbox"
-    - When a package is adjacent to it, delete the package and add a "point"
-    - The point variable should be public, probably stored with truck
-
 - Make "Tire"
     - distrubutes intendedSteps instead of steps when pushed?? OR steps + intendedSteps (optional)
 

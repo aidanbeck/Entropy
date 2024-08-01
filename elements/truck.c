@@ -5,7 +5,8 @@ Truck PLAYER = {
     .x = 10,
     .y = 3,
     .tires = 4,
-    .gas = 100
+    .gas = 100,
+    .points = 0
 };
 
 void updateTruck(int index, Chunk *CHUNK) {

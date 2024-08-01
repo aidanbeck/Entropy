@@ -17,6 +17,7 @@ enum E_Dictionary {
     SPAWNRANDOM,
     SPAWNPACKAGE,
     TRUCK,
+    MAILBOX,
    
     TRAIL,
     COW,
@@ -36,13 +37,16 @@ extern Element E_GAS;
 extern Element E_SPAWNRANDOM;
 extern Element E_SPAWNPACKAGE;
 extern Element E_TRUCK;
+extern Element E_MAILBOX;
 
 extern Element E_TRAIL;
 extern Element E_COW;
 
 void compileElements(Physics *PHYSICS);
-void setTruckIndex(int index); //!!! not in periodicTable.h!
-void setTruckTarget(int index);
+
+
 extern Truck PLAYER; //good idea?
+void setTruckIndex(int index);
+void setTruckTarget(int index); // actually in barista.c
 
 #endif
