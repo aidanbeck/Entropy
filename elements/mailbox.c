@@ -1,4 +1,5 @@
 #include "periodicTable.h"
+#include <stdio.h>
 
 Mesh compassRose3[4] = { // this numbered system for reusal is BAD BAD BAD
     { .x = 0, .y = -1, .z = 0, .length = 4},
@@ -21,6 +22,7 @@ void collectMail(int index, Chunk *CHUNK) {
         if (meshTiles[i] == PACKAGE) {
             uplaces(AIR, meshIndexes[i], CHUNK);
             PLAYER.points++;
+            printf("you got a point!\n");
         }
     }
 }

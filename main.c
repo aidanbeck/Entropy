@@ -35,6 +35,8 @@ void initializeWorld(Chunk *CHUNK, Physics *PHYSICS) {
 
 void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
     for (; CHUNK->tick < TICK_LIMIT; CHUNK->tick++) {
+        
+        if (CHUNK->tick == 0) { clearScreen(); }
         printIcons2d(CHUNK);
         printUpdates2d(CHUNK);
         printPlayer(CHUNK);
@@ -42,7 +44,12 @@ void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
         detectKey();
 
         printHotLawTable(CHUNK);
+
+        printf("\n\n-Events-\n");
         updateChunk(CHUNK, PHYSICS);
+
+        printf("                                                                                   \n                                                                                   \n                                                                                   \n");
+        
 
         //usleep(TICK_DURATION);  
     }

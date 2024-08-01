@@ -12,7 +12,7 @@ Truck PLAYER = {
 void updateTruck(int index, Chunk *CHUNK) {
 
     if (PLAYER.index != index) {
-        printf("something has gone wrong! my index is %d but the truck block is at %d!", PLAYER.index, index);
+        printf("something has gone wrong! my index is %d but the truck block is at %d!\n", PLAYER.index, index);
     }
 
     if (PLAYER.index != PLAYER.target && PLAYER.gas > 0 && PLAYER.tires > 0) {

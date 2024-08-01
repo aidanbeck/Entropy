@@ -1,5 +1,7 @@
 #include "../main.h"
 
+void clearScreen();
+
 void printMemory1d(Chunk *CHUNK);
 
 void printUpdates1d(Chunk *CHUNK);

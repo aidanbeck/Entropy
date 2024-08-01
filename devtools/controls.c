@@ -21,6 +21,7 @@ int getch(void) {
 void detectKey() {
     int open = 1;
     while (open == 1) {
+        open = 0;
         int c = getch();
         if (c == '\n') { // Check for Enter key
             open = 0;

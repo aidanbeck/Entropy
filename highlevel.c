@@ -115,7 +115,7 @@ int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex,
         //if X or Y match an axis, and it is not traveling in a straight line, stop stepping early (this avoids zigzags)
         if (x != 0 && y != 0) { // if traveling diagonally
             if (matchesTargetAxis(index, targetIndex) == 1) { //if matching axis
-                printf(" hit axis. stopping. ");
+                printf("hit axis. stopping.\n");
                 return steps;
             }
         }

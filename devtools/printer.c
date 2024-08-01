@@ -2,6 +2,19 @@
 #include "printer.h"
 #include <stdio.h>
 
+void clearScreen() {
+    printf("\033[2J"); // Clear the screen
+    printf("\033[H");  // Move the cursor to the top-left corner
+}
+
+void printAt(int x, int y, char character) {
+    printf("\033[%d;%dH%c", y+1, x+1, character);
+}
+
+void printStringAt(int x, int y, char* string) {
+    printf("\033[%d;%dH%s", y+1, x+1, string);
+}
+
 void printMemory1d(Chunk *CHUNK) {
 
     printf("\n\n---1d Memory---\n");
@@ -21,7 +34,7 @@ void printUpdates1d(Chunk *CHUNK) {
 
 void printUpdates2d(Chunk *CHUNK) {
 
-    printf("\n\n---2d Updates---\n");
+    printStringAt(75,0, "2D Updates");
 
     char hexish[36] = ".|23456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -29,9 +42,10 @@ void printUpdates2d(Chunk *CHUNK) {
         for (int j = 0; j < CHUNK_WIDTH; j++) {
 
             int update = CHUNK->UPDATES[i*CHUNK_WIDTH + j];
-            printf("%c", hexish[update]);
+            //printf("%c", hexish[update]);
+            printAt(j+75+1, i+1, hexish[update]);
         }
-        printf(" %d\n",i);
+        //printf(" %d\n",i);
     }
 }
 
@@ -49,7 +63,7 @@ void printIcons1d(Chunk *CHUNK) {
 
 void printIcons2d(Chunk *CHUNK) {
 
-    printf("\n\n---2d Icons---\n");
+    printStringAt(0,0, "2D Icons");
 
     for (int i = 0; i < CHUNK_LENGTH; i++) {
         for (int j = 0; j < CHUNK_WIDTH; j++) {
@@ -58,33 +72,35 @@ void printIcons2d(Chunk *CHUNK) {
 
             int tile = CHUNK->TILES[i*CHUNK_WIDTH + j];
             char icon = CHUNK->physics->PeriodicTable[tile].icon;
-            printf("%c", icon);
+            //printf("%c", icon);
+            printAt(j, i+1, icon);
         }
-        printf(" %d\n",i);
+        //printf(" %d\n",i);
     }
-    printf("0123456789   10's   0123456789   30's   0123456789   50's   0123456789\n");
-    printf("   00's   0123456789   20's   0123456789   40's   0123456789   60's   \n");
+    //printf("0123456789   10's   0123456789   30's   0123456789   50's   0123456789\n");
+    //printf("   00's   0123456789   20's   0123456789   40's   0123456789   60's   \n");
 }
 
 void printPlayer(Chunk *CHUNK) {
     printf("\n-Truck-\n");
-    printf("tires: %d.  gas: %d.  points: %d.\n", PLAYER.tires, PLAYER.gas, PLAYER.points);
+    printf("tires: %d.  gas: %d.  points: %d.                \n", PLAYER.tires, PLAYER.gas, PLAYER.points);
 
     int ix = indexToX(PLAYER.index);
     int iy = indexToY(PLAYER.index);    
-    printf("index: %d. (%d,%d)\n", PLAYER.index, ix, iy);
+    printf("index: %d. (%d,%d)                      \n", PLAYER.index, ix, iy);
 
     int tx = indexToX(PLAYER.target);
     int ty = indexToY(PLAYER.target);
-    printf("target: %d. (%d,%d)\n", PLAYER.target, tx, ty);
+    printf("target: %d. (%d,%d)                        \n", PLAYER.target, tx, ty);
 
 }
 
 void printHotLawTable(Chunk *CHUNK) {
 
     HotLaw **table = CHUNK->hotLawTable;
-
-    printf("\ncount:%d, max:%d  -  ", CHUNK->hotLawCount, CHUNK->hotLawMax);
+    
+    printf("\n-HotLaws-\n");
+    printf("count:%d, max:%d  -  ", CHUNK->hotLawCount, CHUNK->hotLawMax);
 
     for (int i = 0; i < 255; i++) {
         if (table[i] == NULL) { 
