@@ -20,6 +20,7 @@ void collectMail(int index, Chunk *CHUNK) {
 
         if (meshTiles[i] == PACKAGE) {
             uplaces(AIR, meshIndexes[i], CHUNK);
+            PLAYER.points++;
         }
     }
 }

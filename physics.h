@@ -63,4 +63,7 @@ void getTargetDirection(int index, int targetIndex, int *x, int *y, int *z);
 int matchesTargetAxis(int index, int targetIndex);
 int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex, Chunk *CHUNK);
 
+//dev function !!!
+void detectKey();
+
 #endif

@@ -65,9 +65,13 @@ void loadMap(Chunk *CHUNK) {
     // addTile(CHUNK, FIRE, 33, 3, 0); //addUpdate(CHUNK, 33, 3, 0);
 
     // fillTile(CHUNK, WOOD, 34, 3, 0, 36, 10, 0);
-    addBoth(CHUNK, ZOMBIE, 33, 4, 0);
+    // addBoth(CHUNK, ZOMBIE, 33, 4, 0);
 
-    addBoth(CHUNK, ZOMBIE, 33, 6, 0);
+    // addBoth(CHUNK, ZOMBIE, 33, 6, 0);
 
-    addBoth(CHUNK, ZOMBIE, 23, 9, 0);  
+    // addBoth(CHUNK, ZOMBIE, 23, 9, 0);
+
+    addBoth(CHUNK, MAILBOX, 42, 7, 0);
+
+    addBoth(CHUNK, SPAWNPACKAGE, 43, 7, 0);
 }

@@ -62,6 +62,22 @@ void printIcons2d(Chunk *CHUNK) {
         }
         printf(" %d\n",i);
     }
+    printf("0123456789   10's   0123456789   30's   0123456789   50's   0123456789\n");
+    printf("   00's   0123456789   20's   0123456789   40's   0123456789   60's   \n");
+}
+
+void printPlayer(Chunk *CHUNK) {
+    printf("\n-Truck-\n");
+    printf("tires: %d.  gas: %d.  points: %d.\n", PLAYER.tires, PLAYER.gas, PLAYER.points);
+
+    int ix = indexToX(PLAYER.index);
+    int iy = indexToY(PLAYER.index);    
+    printf("index: %d. (%d,%d)\n", PLAYER.index, ix, iy);
+
+    int tx = indexToX(PLAYER.target);
+    int ty = indexToY(PLAYER.target);
+    printf("target: %d. (%d,%d)\n", PLAYER.target, tx, ty);
+
 }
 
 void printHotLawTable(Chunk *CHUNK) {

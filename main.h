@@ -10,7 +10,7 @@
 #define COMPILE_MODE 0
 
 //Ticks
-#define TICK_LIMIT 40
+#define TICK_LIMIT 4000000
 #define TICK_DURATION 500000
 
 //Chunk Scaling

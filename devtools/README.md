@@ -67,25 +67,8 @@
 - the "endOfPush" stuff needs standardizing
 - the moveIndexTowards function is likely a mess
 
-## Hotlaw system was a mistake
-- The entire howlaw system is likely a mistake. Or rather, the entire way updates in general are stored is wrong.
-- Potentially, even the way "nextTiles" being a thing is wrong.
-- Instead, I should have a single array of "updates" independent of chunks.
-- Likely only needs to be 100 or so long. Each update contains it's chunk id as well as it's index within that chunk
-- When it gets to over 100, another 100 is made. It's like a linked list with each link having 100 slots
-- it also can contain when it's supposed to "fire" so it can delay a couple ticks.
-- The ticker goes through the list, and moves each update not yet firing forwards
-- this saves memory and possible CPU by a lot given that most tiles do not update every tick
-- I have a better explanation of this in my notebook
-- HotLaws are also possibly less needed, as each "update" can store a few variables without it being as big of a deal
-- In fact, there can be different update lists for each variable combonation
-- The question: Do I fix this now or later? 
-
 
 ## Next Build TODO List
-
-- Make "Tire"
-    ✔️ distrubutes distance (intended steps) + steps (actual steps) instead of just steps.
 
 - Client Side:
     - Let the player spend Gas to increase gas (+25)

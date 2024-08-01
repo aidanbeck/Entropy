@@ -37,11 +37,17 @@ void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
     for (; CHUNK->tick < TICK_LIMIT; CHUNK->tick++) {
         printIcons2d(CHUNK);
         printUpdates2d(CHUNK);
+        printPlayer(CHUNK);
+
+        detectKey();
+
         printHotLawTable(CHUNK);
         updateChunk(CHUNK, PHYSICS);
 
-        usleep(TICK_DURATION);  
+        //usleep(TICK_DURATION);  
     }
+
+    
 }
 
 int main() {
