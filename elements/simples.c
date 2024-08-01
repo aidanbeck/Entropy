@@ -26,6 +26,11 @@ Element E_CENTIBODY = {
     .defaultLaw = &L_NOTHING
 };
 
+Element E_TIRE = {
+    .icon = 'O',
+    .defaultLaw = &L_NOTHING
+};
+
 
 
 // Not Simple But Temporary

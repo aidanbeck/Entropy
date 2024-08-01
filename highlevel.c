@@ -156,6 +156,9 @@ int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex,
         }
 
         int input[3] = {steps, x, y};
+
+        if (tile == TIRE) { input[0] = distance + steps; }
+
         hot(indexAtEndOfPath, input, &L_PUSH, CHUNK);
     }    
 

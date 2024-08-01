@@ -20,6 +20,7 @@ enum E_Dictionary {
     MAILBOX,
     ZOMBIE,
     CORPSE,
+    TIRE,
    
     TRAIL,
     COW,
@@ -42,6 +43,7 @@ extern Element E_TRUCK;
 extern Element E_MAILBOX;
 extern Element E_ZOMBIE;
 extern Element E_CORPSE;
+extern Element E_TIRE;
 
 extern Element E_TRAIL;
 extern Element E_COW;

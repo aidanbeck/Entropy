@@ -83,14 +83,9 @@
 
 
 ## Next Build TODO List
-- Make "zombies"
-    ✔️ They path towards the player 
-    ✔️ Player loses tires when pushed
-    ✔️ They die to fire
-    ✔️ They die to getting pushed
 
 - Make "Tire"
-    - distrubutes intendedSteps instead of steps when pushed?? OR steps + intendedSteps (optional)
+    ✔️ distrubutes distance (intended steps) + steps (actual steps) instead of just steps.
 
 - Client Side:
     - Let the player spend Gas to increase gas (+25)

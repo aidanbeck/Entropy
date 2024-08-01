@@ -22,6 +22,7 @@ void compileElements(Physics *PHYSICS) {
     E[MAILBOX] = E_MAILBOX;
     E[ZOMBIE] = E_ZOMBIE;
     E[CORPSE] = E_CORPSE;
+    E[TIRE] = E_TIRE;
 
     E[TRAIL] = E_TRAIL;
     E[COW] = E_COW;
