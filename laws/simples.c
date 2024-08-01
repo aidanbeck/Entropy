@@ -1,8 +1,6 @@
 #include "lawTable.h"
 
-void nothing(int index, Chunk *CHUNK) {
-    printf("nothing");
-}
+void nothing(int index, Chunk *CHUNK) {}
 Law L_NOTHING = {.func=nothing};
 
 void push(int index, Chunk *CHUNK) {

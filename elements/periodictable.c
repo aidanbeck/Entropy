@@ -19,6 +19,10 @@ void compileElements(Physics *PHYSICS) {
     E[SPAWNPACKAGE] = E_SPAWNPACKAGE;
 
     E[TRUCK] = E_TRUCK;
+    E[MAILBOX] = E_MAILBOX;
+    E[ZOMBIE] = E_ZOMBIE;
+    E[CORPSE] = E_CORPSE;
+
     E[TRAIL] = E_TRAIL;
     E[COW] = E_COW;
 }

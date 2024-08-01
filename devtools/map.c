@@ -21,7 +21,13 @@ void addTile(Chunk *CHUNK, int tile, int x, int y, int z) {
 
 void addUpdate(Chunk *CHUNK, int x, int y, int z) {
     int i = getIndex(x,y,z);
-    CHUNK->UPDATES[i] = 1;
+    CHUNK->nextUpdates[i] = 1;
+}
+
+void addBoth(Chunk *CHUNK, int tile, int x, int y, int z) {
+    int i = getIndex(x,y,z);
+    place(tile, i, CHUNK);
+    CHUNK->nextUpdates[i] = 1;
 }
 
 void fillTile(Chunk *CHUNK, int tile, int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -58,5 +64,9 @@ void loadMap(Chunk *CHUNK) {
     // addTile(CHUNK, FIRE, 33, 3, 0); //addUpdate(CHUNK, 33, 3, 0);
 
     // fillTile(CHUNK, WOOD, 34, 3, 0, 36, 10, 0);
-    // addTile(CHUNK, GAS, 33, 4, 0);   
+    addBoth(CHUNK, ZOMBIE, 33, 4, 0);
+
+    addBoth(CHUNK, ZOMBIE, 33, 6, 0);
+
+    addBoth(CHUNK, ZOMBIE, 23, 9, 0);  
 }

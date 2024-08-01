@@ -18,6 +18,8 @@ enum E_Dictionary {
     SPAWNPACKAGE,
     TRUCK,
     MAILBOX,
+    ZOMBIE,
+    CORPSE,
    
     TRAIL,
     COW,
@@ -38,6 +40,8 @@ extern Element E_SPAWNRANDOM;
 extern Element E_SPAWNPACKAGE;
 extern Element E_TRUCK;
 extern Element E_MAILBOX;
+extern Element E_ZOMBIE;
+extern Element E_CORPSE;
 
 extern Element E_TRAIL;
 extern Element E_COW;

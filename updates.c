@@ -86,7 +86,7 @@ void overwriteChunk(Chunk *CHUNK) {
 void updateAllTiles(Chunk *CHUNK, Physics *PHYSICS) {
     uint8_t *updates     = CHUNK->UPDATES;
     for (int i = 0; i < CHUNK_SIZE; i++) {
-        printf(",%d", CHUNK->physics->PeriodicTable[CHUNK->TILES[i]].icon);
+        //printf(",%d", CHUNK->physics->PeriodicTable[CHUNK->TILES[i]].icon);
         if (updates[i] == 0) { continue; }
         updateTile(i, updates[i], CHUNK, PHYSICS);
     }

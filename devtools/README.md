@@ -84,11 +84,10 @@
 
 ## Next Build TODO List
 - Make "zombies"
-    - They path towards the player
-    - They remove tires from the player if adjacent to them
-    - They die to fire
-    - They die to getting pushed
-    - If the player has no tires, and they are adjacent, trigger a "game over" function (access client from barista)
+    ✔️ They path towards the player 
+    ✔️ Player loses tires when pushed
+    ✔️ They die to fire
+    ✔️ They die to getting pushed
 
 - Make "Tire"
     - distrubutes intendedSteps instead of steps when pushed?? OR steps + intendedSteps (optional)
@@ -98,3 +97,4 @@
     - Let the player spend tire to increase tires (+1)
     - Let the player use moveTruck() when moving the truck, instead of the normal place command
     - Alert game over (accessible by barista)
+    - If the player has no tires, and they are adjacent, trigger a "game over" function (access client from barista) (also needs C function)

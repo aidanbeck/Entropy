@@ -134,6 +134,10 @@ int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex,
 
     *returnIndex = newIndex;
 
+    if (tile == TRUCK) { // spaghetti code special exception
+        PLAYER.index = newIndex;
+    }
+
 
 
     //Push the tile that it runs into the number of steps it took.
@@ -143,6 +147,14 @@ int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex,
     int tileAtEndOfPath = view( indexAtEndOfPath, CHUNK );
 
     if (tileAtEndOfPath != AIR && tileAtEndOfPath != STONE && steps != 0) {
+
+        if (tileAtEndOfPath == TRUCK) { //spaghetti code special exception
+            PLAYER.tires--; //eventually handle this with function?
+        }
+        if (tileAtEndOfPath == ZOMBIE) {
+            place(CORPSE, indexAtEndOfPath, CHUNK); //dies if pushed
+        }
+
         int input[3] = {steps, x, y};
         hot(indexAtEndOfPath, input, &L_PUSH, CHUNK);
     }    

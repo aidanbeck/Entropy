@@ -33,6 +33,12 @@ void fireSpread(int index, Chunk *CHUNK) {
         if (meshTiles[i] == WOOD) {
             uplaces(FIRE, meshIndexes[i], CHUNK);
         }
+        else if (meshTiles[i] == ZOMBIE) { //should things just have a burnable value instead of being hardcoded? how can I make this modular?
+            uplaces(CORPSE, meshIndexes[i], CHUNK);
+        }
+        else if (meshTiles[i] == CORPSE) {
+            uplaces(FIRE, meshIndexes[i], CHUNK);
+        }
     }
 }
 Law     l_FIRESPREAD = { .func = fireSpread };
