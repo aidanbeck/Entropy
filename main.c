@@ -40,8 +40,6 @@ void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
         printHotLawTable(CHUNK);
         updateChunk(CHUNK, PHYSICS);
 
-        setTruckTarget(1050-1);
-
         usleep(TICK_DURATION);  
     }
 }

@@ -39,3 +39,5 @@ void setTruckIndex(int index) {
     truck->x = indexToX(index);
     truck->y = indexToY(index);    
 }
+
+//setTruckTarget is inside of barista.c because it needs to be accessible from JS

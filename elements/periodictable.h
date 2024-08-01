@@ -41,7 +41,7 @@ extern Element E_TRAIL;
 extern Element E_COW;
 
 void compileElements(Physics *PHYSICS);
-void setTruckIndex(int index);
+void setTruckIndex(int index); //!!! not in periodicTable.h!
 void setTruckTarget(int index);
 extern Truck PLAYER; //good idea?
 
