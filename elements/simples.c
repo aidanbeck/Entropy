@@ -40,9 +40,8 @@ Element E_TRAIL = { .defaultLaw = &l_EVAPORATE, .icon = '~'};
 
 
 void cow(int index, Chunk *CHUNK) {
-    int returnIndex;
-    int steps = moveIndexTowards(index, index+10, 9, &returnIndex, CHUNK);
-    if (steps == 0) { update(index, CHUNK); }
+    moveTileTowards(index, index+10, 4, CHUNK);
+    update(index, CHUNK);
 }
 Law l_COW = { .func = cow};
 Element E_COW = { .defaultLaw = &l_COW, .icon = 'n'};

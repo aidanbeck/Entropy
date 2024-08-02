@@ -49,6 +49,8 @@ void loopTicks(Chunk *CHUNK, Physics *PHYSICS) {
         updateChunk(CHUNK, PHYSICS);
 
         printf("                                                                                   \n                                                                                   \n                                                                                   \n");
+        printf("                                                                                   \n                                                                                   \n                                                                                   \n");
+        printf("                                                                                   \n                                                                                   \n                                                                                   \n");
         
 
         //usleep(TICK_DURATION);  

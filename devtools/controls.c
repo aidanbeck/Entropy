@@ -18,6 +18,22 @@ int getch(void) {
     return ch;
 }
 
+
+
+void moveTarget(int x, int y, int z) {
+    int px = indexToX(PLAYER.index) + x;
+    int py = indexToY(PLAYER.index) + y;
+
+    
+                        
+    if (px < 1 ) { px = 1; }
+    if (px > CHUNK_WIDTH - 2) {px = CHUNK_WIDTH - 2; }
+    if (py < 1 ) { py = 1; }
+    if (py > CHUNK_LENGTH - 2) {py = CHUNK_LENGTH - 2; }
+                        
+    PLAYER.target = moveIndex(0,px,py,0);
+}
+
 void detectKey() {
     int open = 1;
     while (open == 1) {
@@ -34,21 +50,21 @@ void detectKey() {
                 switch (c) {
                     case 0x41:
                         
-                        PLAYER.target = moveIndex(PLAYER.index, 0, -4, 0);
+                        moveTarget(0, -4, 0);
 
                         open = 0;
                         break;
                     case 0x42:
 
-                        PLAYER.target = moveIndex(PLAYER.index, 0, 4, 0);
+                        moveTarget(0, 4, 0);
                         open = 0;
                         break;
                     case 0x44:
-                        PLAYER.target = moveIndex(PLAYER.index, -4, 0, 0);
+                        moveTarget(-4, 0, 0);
                         open = 0;
                         break;
                     case 0x43:
-                        PLAYER.target = moveIndex(PLAYER.index, 4, 0, 0);
+                        moveTarget(4, 0, 0);
                         open = 0;
                         break;
                 }

@@ -50,9 +50,12 @@ void createBorder(Chunk *CHUNK) {
 void loadMap(Chunk *CHUNK) {
 
     createBorder(CHUNK);
-    addTile(CHUNK, TRUCK, PLAYER.x, PLAYER.y, 0);
+    fillTile(CHUNK, STONE, 30, 3, 0, 31, 10, 0);
+
+
+    addBoth(CHUNK, TRUCK, PLAYER.x, PLAYER.y, 0);
+
     addTile(CHUNK, TIRE, PLAYER.x+2, PLAYER.y, 0);
-    addUpdate(CHUNK, PLAYER.x, PLAYER.y, 0);
 
     //addTile(CHUNK, SPAWNRANDOM, 50, 3, 0); addUpdate(CHUNK, 50, 3, 0);
 

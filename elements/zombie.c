@@ -5,8 +5,7 @@ void shamble(int index, Chunk *CHUNK) {
 
     int speed = 2;
 
-    int returnIndex;
-    moveIndexTowards(index, PLAYER.index, speed, &returnIndex, CHUNK);
+    moveTileTowards(index, PLAYER.index, speed, CHUNK);
     
     update(index, CHUNK);
 }

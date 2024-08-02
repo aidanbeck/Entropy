@@ -61,7 +61,7 @@ int indexToZ(int index);
 int indexInBounds(int index);
 void getTargetDirection(int index, int targetIndex, int *x, int *y, int *z);
 int matchesTargetAxis(int index, int targetIndex);
-int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex, Chunk *CHUNK);
+void moveTileTowards(int index, int targetIndex, int distance, Chunk *CHUNK);
 
 //dev function !!!
 void detectKey();

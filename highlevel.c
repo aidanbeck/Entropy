@@ -40,8 +40,8 @@ int indexInBounds(int index) {
     int x = indexToX(index);
     int y = indexToY(index);
 
-    if (x <= 1 || x >= 150) { return 0; }
-    if (y <= 1 || y >= 15) { return 0; }
+    if (x < 1 || x > CHUNK_WIDTH - 2) { return 0; } //!!! doesnt scale!
+    if (y < 1 || y > CHUNK_LENGTH - 2) { return 0; }
 
     return 1;
 }
@@ -98,69 +98,137 @@ int matchesTargetAxis(int index, int targetIndex) {
 }
 
 /*
-    Returns with the number of steps it successfully made.
-    Should possibly refactor this using a "findDirection" function or something so that they go in a straight line.
+    Calculates the distances between two indexes along all three axis'.
+    Returns the smallest distance.
 */
-int moveIndexTowards(int index, int targetIndex, int distance, int *returnIndex, Chunk *CHUNK) {
+int getSmallestAxisDistance(int index, int targetIndex) {
 
-    int tile = CHUNK->TILES[index];
-    int newIndex = index;
-    int steps = 0;
+    int indexX = indexToX(index);
+    int targetX = indexToX(targetIndex);
+    int xDistance = abs(indexX - targetX);
 
-    int x, y, z; //Direction. Velocity? Needs naming consistency.
-    getTargetDirection(index, targetIndex, &x, &y, &z);
+    int indexY = indexToY(index);
+    int targetY = indexToY(targetIndex);
+    int yDistance = abs(indexY - targetY);
+
+    //int indexZ = indexToZ(index);
+    //int targetZ = indexToZ(targetIndex);
+    //int zDistance = abs(indexZ - targetZ); // Disabled because I don't want tiles to try and move on the Z axis.
+
+    //if ALREADY on axis, ignore that axis
+    if (xDistance == 0 ) {return yDistance; }
+    if (yDistance == 0 ) {return xDistance; }
+
+    if (xDistance < yDistance) {
+        return xDistance;
+    } else {
+        return yDistance;
+    }
+}
+
+
+
+
+/*
+    Grab the indexes of coordinates between two points.
+    (Starting with the first, and until the distance limit is reached, or an axis of the second point is passed)
+
+    Return the number of indexes grabbed.
+*/
+int getIndexesTowards(int index, int targetIndex, int distance, int* indexes ) {
+
+    //Initialize direction variables
+    int xDir, yDir, zDir; getTargetDirection(index, targetIndex, &xDir, &yDir, &zDir);
+
+    //If going the entire distance will overpass an axis of the target, shorten the distance.
+    int smallestDistance = getSmallestAxisDistance(index, targetIndex);
+    if (smallestDistance < distance) { distance = smallestDistance; }
+
+    //Grab indexes of coordinates in the direction of target
+    int movedIndex = index;
+
+    for (int i = 0; i < 64; i++) {indexes[i] = 8; } //initialize !!!
 
     for (int i = 0; i < distance; i++) {
+        
+        movedIndex   = moveIndex(movedIndex, xDir, yDir, zDir);
+        int inBounds = indexInBounds(movedIndex);
 
-        //if X or Y match an axis, and it is not traveling in a straight line, stop stepping early (this avoids zigzags)
-        if (x != 0 && y != 0) { // if traveling diagonally
-            if (matchesTargetAxis(index, targetIndex) == 1) { //if matching axis
-                printf("hit axis. stopping.\n");
-                return steps;
-            }
+        if (inBounds == 1) { 
+            indexes[i] = movedIndex;
+        } else {
+            return i - 1;
         }
 
-        newIndex = moveIndex(index, x, y, z);
-
-        if (indexIsEmpty(newIndex, CHUNK) == 1 && index != targetIndex) { //if index is empty & NOT the target
-
-            uplaces(TRAIL, index, CHUNK);
-            uplaces(tile, newIndex, CHUNK);
-            index = newIndex;
-            steps++;
-
-        }
     }
 
-    *returnIndex = newIndex;
+    return distance;
+}
 
-    if (tile == TRUCK) { // spaghetti code special exception
-        PLAYER.index = newIndex;
+void pushTileTowards(int indexToPush, int distanceToPush, int initialIndex, int initialTarget, Chunk *CHUNK) {
+
+    //get directional input
+    int xDir, yDir, zDir; getTargetDirection(initialIndex, initialTarget, &xDir, &yDir, &zDir);
+    int input[3] = {distanceToPush, xDir, yDir};
+
+    uint8_t tile = view(indexToPush, CHUNK);
+    if (tile == STONE ) { return; }
+    if (tile == ZOMBIE) { uplace(CORPSE, indexToPush, CHUNK); }
+    if (tile == TIRE) { input[0] = distanceToPush + 4; }
+    if (tile == GAS) {} 
+
+    hot(indexToPush, input, &L_PUSH, CHUNK);
+}
+
+//maybe this should return ending index so that gas can explode at the end?
+void moveTileTowards(int index, int targetIndex, int distance, Chunk *CHUNK) {
+
+    int indexes[64];
+    if (distance > 64) {
+        printf("Error! Distance of %d exceeds limit of 64!\n", distance);
+        distance = 64;
     }
 
+    int indexesDistance = getIndexesTowards(index, targetIndex, distance, indexes);
 
+    printf("indexesInBoundsAndTowards: (%d), %d, %d, %d, %d\n", indexesDistance, indexes[0], indexes[1], indexes[2], indexes[3]);
+    
+    int emptyDistance = -1;
 
-    //Push the tile that it runs into the number of steps it took.
-    //This works unless the tile also tries to move.
+    for (int i = 0; i < indexesDistance; i++) {
 
-    int indexAtEndOfPath = moveIndex(index, x, y, z);
-    int tileAtEndOfPath = view( indexAtEndOfPath, CHUNK );
+        int isEmpty = indexIsEmpty(indexes[i], CHUNK);
 
-    if (tileAtEndOfPath != AIR && tileAtEndOfPath != STONE && steps != 0) {
+        if (isEmpty == 0) { break; }
+        emptyDistance = i;
+        //uplace(TRAIL, indexes[i], CHUNK);
 
-        if (tileAtEndOfPath == TRUCK) { //spaghetti code special exception
-            PLAYER.tires--; //eventually handle this with function?
-        }
-        if (tileAtEndOfPath == ZOMBIE) {
-            place(CORPSE, indexAtEndOfPath, CHUNK); //dies if pushed
-        }
+    }
 
-        int input[3] = {steps, x, y};
+    
 
-        if (tile == TIRE) { input[0] = distance + steps; }
+    printf("emptyDistance: %d\n", emptyDistance);
+    printf("indexes: %d, %d, %d, %d\n", indexIsEmpty(indexes[0], CHUNK), indexIsEmpty(indexes[1], CHUNK), indexIsEmpty(indexes[2], CHUNK), indexIsEmpty(indexes[3], CHUNK));
 
-        hot(indexAtEndOfPath, input, &L_PUSH, CHUNK);
-    }    
+    if (emptyDistance == -1) { //against wall;
+        return;
+    }
 
-    return steps;
+    // move tile to new index
+    uplaces(AIR, index, CHUNK);
+    uint8_t tile = view(index, CHUNK);
+    uplaces(tile, indexes[emptyDistance], CHUNK);
+
+    // Update entities !!! this should be less hard coded.
+    if (tile == TRUCK) { setTruckIndex(indexes[emptyDistance]); }
+    // gas explosion can go here
+    
+    // if stopped prematurely
+    if (emptyDistance < indexesDistance) {
+
+        int indexToPush    = indexes[emptyDistance+1];
+        int distanceToPush = abs(emptyDistance - indexesDistance);
+
+        pushTileTowards(indexToPush, distanceToPush, index, targetIndex, CHUNK);
+    }
 }

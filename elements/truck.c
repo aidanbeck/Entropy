@@ -17,16 +17,17 @@ void updateTruck(int index, Chunk *CHUNK) {
 
     if (PLAYER.index != PLAYER.target && PLAYER.gas > 0 && PLAYER.tires > 0) {
         
-        int returnIndex;
-        int steps = moveIndexTowards(index, PLAYER.target, 4, &returnIndex, CHUNK);
-        if (steps == 0) { update(index, CHUNK); } else { setTruckIndex(returnIndex); }
+        moveTileTowards(index, PLAYER.target, 4, CHUNK);
+        
+        // These can be done here rather than inside the function if it is just given the information?
+        //setTruckIndex(returnIndex);
+        //PLAYER.gas -= steps;
 
-        PLAYER.gas -= steps;
         if (PLAYER.gas < 0) { PLAYER.gas = 0; }
 
-    } else {
-        update(index, CHUNK);
     }
+
+    update(index, CHUNK);
 }
 
 Law l_UPDATETRUCK = {.func=updateTruck};

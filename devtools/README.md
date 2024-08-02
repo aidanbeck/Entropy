@@ -70,6 +70,15 @@
 
 ## Next Build TODO List
 
+- refactor moveIndexTowards
+    - take an index, target, and distance
+    - look at each space in the direction of the target
+        - stop whenever the distance is reached OR something is in the way
+        - can be useful to count the number of steps.
+    - return the moved index
+    
+    - delete the object at the initial index, and place it at the moved index
+
 - Client Side:
     - Let the player spend Gas to increase gas (+25)
     - Let the player spend tire to increase tires (+1)
